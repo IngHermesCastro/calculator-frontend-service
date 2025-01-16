@@ -15,7 +15,11 @@ export interface Form {
     tasaRiesgo: number;
     capacitacionesSeguridad: number;
     inspeccionesSeguridad: number;
-    observacionesCSeguros:number;
-    correcionConInseguras:number;
-    cumplimientoUsoEPP:number;
+    observacionesCSeguros: number;
+    correcionConInseguras: number;
+    cumplimientoUsoEPP: number;
+    numeroTrabajadores: number;
+    nivelDeRiesgo: string;
+    horasMinimasGestion: string;
+    personalSaludDetalles: string;
 }

@@ -1,5 +1,5 @@
 export interface Riesgo {
-    codigo: string,
-    descripcion: string,
-    nivel_de_riesgo: string
-}
+    id?: string;
+    descripcion: string;
+    nivel_de_riesgo: string;
+  }

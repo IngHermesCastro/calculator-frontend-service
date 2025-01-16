@@ -145,3 +145,66 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
+.autocomplete-container {
+  position: relative;
+  width: 100%;
+}
+
+.sugerencias-container {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-top: none;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.sugerencias-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sugerencias-lista li {
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sugerencias-lista li:hover {
+  background-color: #f5f5f5;
+}
+
+.sugerencias-lista li.selected {
+  background-color: #e0e0e0;
+}
+
+.actividad-descripcion {
+  flex: 1;
+}
+
+.nivel-riesgo {
+  margin-left: 12px;
+  color: #666;
+  font-size: 0.9em;
+}
+
+input.invalid {
+  border-color: #dc3545;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.875em;
+  margin-top: 4px;
+}
+
+/* Estilos existentes... */

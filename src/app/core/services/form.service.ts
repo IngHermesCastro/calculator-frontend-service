@@ -1,7 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import { addDoc, collection, DocumentData, DocumentReference, Firestore } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, Firestore, query, where, DocumentData } from '@angular/fire/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Form } from '../interfaces/form';
+import { Observable, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+import { Riesgo } from '../interfaces/riesgos';
 
 @Injectable({
   providedIn: 'root'
@@ -9,10 +12,10 @@ import { Form } from '../interfaces/form';
 export class RiesgosService {
   private readonly _firestore = inject(Firestore);
   private readonly _formCollection = collection(this._firestore, 'forms');
+  private readonly _riesgosCollection = collection(this._firestore, 'riesgos');
   form: FormGroup;
 
   constructor(private fb: FormBuilder) {
-    // Inicializamos el formulario basado en la interfaz `Form`
     this.form = this.fb.group({
       nombreEmpresa: ['', Validators.required],
       correoElectronico: ['', [Validators.required, Validators.email]],
@@ -21,60 +24,205 @@ export class RiesgosService {
       cantidadMujeres: [0, [Validators.required, Validators.min(0)]],
       empresaTipo: ['', Validators.required],
       provincia: ['', Validators.required],
-      tipoInstitucion: ['', Validators.required],
+      tipoInstitucion: [{ value: '', disabled: true }, Validators.required],
       comiteParitario: ['', Validators.required],
       monitorSeguridad: ['', Validators.required],
       personalSalud: ['', Validators.required],
-      indiceFrecuencia: [0, Validators.min(0)],
-      indiceGravedad: [0, Validators.min(0)],
-      tasaRiesgo: [0, Validators.min(0)],
-      capacitacionesSeguridad: [0, Validators.min(0)],
-      inspeccionesSeguridad: [0, Validators.min(0)],
-      observacionesCSeguros: [0, Validators.min(0)],
-      correcionConInseguras: [0, Validators.min(0)],
-      cumplimientoUsoEPP: [0, Validators.min(0)],
+      indiceFrecuencia: [{ value: 0, disabled: true }, Validators.min(0)],
+      indiceGravedad: [{ value: 0, disabled: true }, Validators.min(0)],
+      tasaRiesgo: [{ value: 0, disabled: true }, Validators.min(0)],
+      capacitacionesSeguridad: [{ value: 0, disabled: true }, Validators.min(0)],
+      inspeccionesSeguridad: [{ value: 0, disabled: true }, Validators.min(0)],
+      observacionesCSeguros: [{ value: 0, disabled: true }, Validators.min(0)],
+      correcionConInseguras: [{ value: 0, disabled: true }, Validators.min(0)],
+      cumplimientoUsoEPP: [{ value: 0, disabled: true }, Validators.min(0)],
+      numeroTrabajadores: [{ value: 0, disabled: true }, Validators.min(0)],
+      nivelDeRiesgo: [{ value: '', disabled: true }],
+      horasMinimasGestion: [{ value: '', disabled: true }],
+      personalSaludDetalles: [{ value: '', disabled: true }]
     });
   }
 
-  /**
-   * Agregar un nuevo formulario a Firestore.
-   */
-  newForm(): Promise<DocumentReference<DocumentData>> {
-    return addDoc(this._formCollection, this.form.value);
+  newForm(): Promise<any> {
+    const formData = this.form.getRawValue();
+    const formValues: Form = {
+      ...formData,
+      indiceFrecuencia: formData.indiceFrecuencia.resultado,
+      indiceGravedad: formData.indiceGravedad.resultado,
+      tasaRiesgo: formData.tasaRiesgo.resultado,
+      capacitacionesSeguridad: formData.capacitacionesSeguridad.resultado,
+      inspeccionesSeguridad: formData.inspeccionesSeguridad.resultado,
+      observacionesCSeguros: formData.observacionesCSeguros.resultado,
+      correcionConInseguras: formData.correcionConInseguras.resultado,
+      cumplimientoUsoEPP: formData.cumplimientoUsoEPP.resultado
+    };
+    return addDoc(this._formCollection, formValues);
   }
 
-  /**
-   * Actualizar los datos generales del formulario.
-   */
-  setForm1(pForm: Partial<Form>) {
-    this.form.patchValue({
-      nombreEmpresa: pForm.nombreEmpresa || '',
-      correoElectronico: pForm.correoElectronico || '',
-      actividadEconomica: pForm.actividadEconomica || '',
-      cantidadHombres: pForm.cantidadHombres || 0,
-      cantidadMujeres: pForm.cantidadMujeres || 0,
-      empresaTipo: pForm.empresaTipo || '',
-      provincia: pForm.provincia || '',
-      tipoInstitucion: pForm.tipoInstitucion || '',
-      comiteParitario: pForm.comiteParitario || '',
-      monitorSeguridad: pForm.monitorSeguridad || '',
-      personalSalud: pForm.personalSalud || '',
-    });
+  obtenerTodasLasActividades(): Observable<Riesgo[]> {
+    return collectionData(this._riesgosCollection, { idField: 'id' }) as Observable<Riesgo[]>;
   }
 
-  /**
-   * Actualizar los indicadores de riesgos.
-   */
+  buscarActividades(searchTerm: string): Observable<Riesgo[]> {
+    const q = query(this._riesgosCollection, where('descripcion', '>=', searchTerm), where('descripcion', '<=', searchTerm + '\uf8ff'));
+    return collectionData(q, { idField: 'id' }).pipe(
+      map((riesgos: DocumentData[]) => riesgos.filter((actividad: DocumentData) => 
+        (actividad['descripcion'] || '').toLowerCase().includes(searchTerm.toLowerCase())
+      ) as Riesgo[])
+    );
+  }
+
+  getNivelDeRiesgo(descripcion: string): Observable<string> {
+    const q = query(this._riesgosCollection, where('descripcion', '==', descripcion));
+    return collectionData(q, { idField: 'id' }).pipe(
+      map(riesgos => {
+        if (riesgos.length > 0 && riesgos[0]['nivel_de_riesgo']) {
+          return riesgos[0]['nivel_de_riesgo'];
+        } else {
+          console.warn('No se encontró el nivel de riesgo para la actividad:', descripcion);
+          return '';
+        }
+      }),
+      catchError(error => {
+        console.error('Error al obtener el nivel de riesgo:', error);
+        return of('');
+      })
+    );
+  }
+
+  setForm1(formValue: Partial<Form>) {
+    this.form.patchValue(formValue);
+  }
+  
   setForm2(pForm: Partial<Form>) {
+    this.form.patchValue(pForm);
+  }
+
+  setTipoEmpresa(totalTrabajadores: number): string {
+    if (totalTrabajadores >= 1 && totalTrabajadores <= 9) {
+      return 'Micro';
+    } else if (totalTrabajadores >= 10 && totalTrabajadores <= 49) {
+      return 'Pequeña';
+    } else if (totalTrabajadores >= 50 && totalTrabajadores <= 99) {
+      return 'Mediana A';
+    } else if (totalTrabajadores >= 100 && totalTrabajadores <= 199) {
+      return 'Mediana B';
+    } else if (totalTrabajadores >= 200) {
+      return 'Grande';
+    }
+    return '';
+  }
+
+  calcularNumeroTrabajadores(cantidadHombres: number, cantidadMujeres: number): number {
+    return cantidadHombres + cantidadMujeres;
+  }
+
+  obtenerNivelDeRiesgo(tipoInstitucion: string, actividadEconomica: any): string {
+    const actividadEconomicaStr = String(actividadEconomica || '');
+    
+    if (actividadEconomicaStr.toLowerCase().includes('alto')) {
+      return 'Alto';
+    } else if (actividadEconomicaStr.toLowerCase().includes('medio')) {
+      return 'Medio';
+    } else {
+      return 'Bajo';
+    }
+  }
+
+  MinimasGestion(tipoInstitucion: string, nivelDeRiesgo: string): string {
+    const trabajadores = this.calcularNumeroTrabajadores(this.form.get('cantidadHombres')?.value, this.form.get('cantidadMujeres')?.value);
+    let horas = '';
+
+    if (tipoInstitucion === 'Micro') {
+      horas = nivelDeRiesgo === 'Bajo/Medio' ? '8 horas/mes' : '16 horas/mes';
+    } else if (tipoInstitucion === 'Pequeña') {
+      if (nivelDeRiesgo === 'Bajo') horas = '16 horas/mes';
+      else if (nivelDeRiesgo === 'Medio') horas = '32 horas/mes';
+      else horas = '48 horas/mes';
+    } else if (tipoInstitucion === 'Mediana A') {
+      if (nivelDeRiesgo === 'Bajo') horas = '32 horas/mes';
+      else if (nivelDeRiesgo === 'Medio') horas = '48 horas/mes';
+      else horas = '64 horas/mes';
+    } else if (tipoInstitucion === 'Mediana B') {
+      horas = 'Personal permanente (8 horas diarias)';
+    } else if (tipoInstitucion === 'Grande') {
+      if (nivelDeRiesgo === 'Bajo/Medio') {
+        horas = `Personal permanente (8 horas diarias) * por técnico de seguridad e higiene del trabajo`;
+      } else {
+        horas = `Personal permanente (8 horas diarias) * por técnico de seguridad e higiene del trabajo`;
+      }
+    }
+
+    return horas;
+  }
+
+  obtenerPersonalSaludDetalles(tipoInstitucion: string, numeroTrabajadores: number): string {
+    if (!tipoInstitucion) return '';
+
+    let detalles = '';
+    
+    if (tipoInstitucion === 'Micro' || tipoInstitucion === 'Pequeña') {
+      detalles = 'Un profesional médico con formación en 4to nivel en seguridad y salud en el trabajo de visita periódica.';
+    } else if (tipoInstitucion === 'Mediana A' || tipoInstitucion === 'Mediana B' || tipoInstitucion === 'Grande') {
+      detalles = 'Un profesional médico con formación en 4to nivel en seguridad y salud en el trabajo.';
+      
+      if (tipoInstitucion === 'Grande') {
+        detalles += ' Un profesional de enfermería.';
+        if (numeroTrabajadores >= 300) {
+          detalles += ' Un profesional en psicología.';
+        }
+        if (numeroTrabajadores >= 1000) {
+          detalles += ' Un profesional médico con especialidad en Medicina del trabajo.';
+        }
+      }
+    }
+
+    return detalles;
+  }
+
+  unirFormularios(): Form {
+    return {
+      ...this.form.value, // Asegúrate de que 'this.form' tiene todos los campos necesarios
+    };
+  }
+
+  obtenerHorasMinimasGestion(tipoInstitucion: string, nivelDeRiesgo: string): string {
+    if (!tipoInstitucion || !nivelDeRiesgo) return '';
+
+    switch (tipoInstitucion) {
+      case 'Micro':
+        return nivelDeRiesgo.toLowerCase().includes('bajo') || nivelDeRiesgo.toLowerCase().includes('medio') 
+          ? '8 horas/mes' 
+          : '16 horas/mes';
+      case 'Pequeña':
+        if (nivelDeRiesgo.toLowerCase().includes('bajo')) return '16 horas/mes';
+        if (nivelDeRiesgo.toLowerCase().includes('medio')) return '32 horas/mes';
+        return '48 horas/mes';
+      case 'Mediana A':
+        if (nivelDeRiesgo.toLowerCase().includes('bajo')) return '32 horas/mes';
+        if (nivelDeRiesgo.toLowerCase().includes('medio')) return '48 horas/mes';
+        return '64 horas/mes';
+      case 'Mediana B':
+      case 'Grande':
+        return 'Personal permanente (8 horas diarias)';
+      default:
+        return '';
+    }
+  }
+
+  actualizarCamposCalculados(formValue: any) {
+    const totalTrabajadores = this.calcularNumeroTrabajadores(formValue.cantidadHombres, formValue.cantidadMujeres);
+    const tipoInstitucion = this.setTipoEmpresa(totalTrabajadores);
+    const nivelDeRiesgo = this.obtenerNivelDeRiesgo(tipoInstitucion, formValue.actividadEconomica);
+    const horasMinimasGestion = this.obtenerHorasMinimasGestion(tipoInstitucion, nivelDeRiesgo);
+    const personalSaludDetalles = this.obtenerPersonalSaludDetalles(tipoInstitucion, totalTrabajadores);
+
     this.form.patchValue({
-      indiceFrecuencia: pForm.indiceFrecuencia || 0,
-      indiceGravedad: pForm.indiceGravedad || 0,
-      tasaRiesgo: pForm.tasaRiesgo || 0,
-      capacitacionesSeguridad: pForm.capacitacionesSeguridad || 0,
-      inspeccionesSeguridad: pForm.inspeccionesSeguridad || 0,
-      observacionesCSeguros: pForm.observacionesCSeguros || 0,
-      correcionConInseguras: pForm.correcionConInseguras || 0,
-      cumplimientoUsoEPP: pForm.cumplimientoUsoEPP || 0,
-    });
+      tipoInstitucion: tipoInstitucion,
+      numeroTrabajadores: totalTrabajadores,
+      nivelDeRiesgo: nivelDeRiesgo,
+      horasMinimasGestion: horasMinimasGestion,
+      personalSaludDetalles: personalSaludDetalles,
+    }, { emitEvent: false });
   }
 }

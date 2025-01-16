@@ -9,26 +9,38 @@
       <div class="form-row">
         <div class="form-group">
           <label for="nombreEmpresa">NOMBRE EMPRESA</label>
-          <input id="nombreEmpresa" type="text" formControlName="nombreEmpresa" placeholder="Ingresar">
+          <input id="nombreEmpresa" type="text" class="form-control" formControlName="nombreEmpresa" placeholder="Ingresar">
         </div>
 
         <div class="form-group">
           <label for="correoElectronico">CORREO ELECTRÓNICO</label>
-          <input id="correoElectronico" type="email" formControlName="correoElectronico" placeholder="Ingresar">
+          <input id="correoElectronico" type="email" class="form-control" formControlName="correoElectronico" placeholder="Ingresar">
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
           <label for="actividadEconomica">ACTIVIDAD ECONÓMICA</label>
-          <input id="actividadEconomica" type="text" formControlName="actividadEconomica" placeholder="Ingresar">
+          <input id="actividadEconomica"
+                  type="text"
+                  class="form-control"
+                  formControlName="actividadEconomica"
+                  [ngbTypeahead]="buscarActividad"
+                  [inputFormatter]="formatearActividad"
+                  [resultFormatter]="formatearActividad"
+                  (selectItem)="seleccionarActividad($event)"
+                  [class.is-invalid]="form.get('actividadEconomica')?.touched && !actividadSeleccionada"
+                  placeholder="Buscar actividad económica">
+          <div class="invalid-feedback" *ngIf="form.get('actividadEconomica')?.touched && !actividadSeleccionada">
+            Debe seleccionar una actividad económica válida
+          </div>
         </div>
 
         <div class="form-group">
           <label>CANTIDAD TRABAJADORES HOMBRES/MUJERES</label>
-          <div class="sub-group">
-            <input type="number" formControlName="cantidadHombres" placeholder="Hombres">
-            <input type="number" formControlName="cantidadMujeres" placeholder="Mujeres">
+          <div class="input-group">
+            <input type="number" class="form-control" formControlName="cantidadHombres" placeholder="Hombres">
+            <input type="number" class="form-control" formControlName="cantidadMujeres" placeholder="Mujeres">
           </div>
         </div>
       </div>
@@ -36,7 +48,7 @@
       <div class="form-row">
         <div class="form-group">
           <label for="empresaTipo">EMPRESA PÚBLICA/PRIVADA</label>
-          <select id="empresaTipo" formControlName="empresaTipo">
+          <select id="empresaTipo" class="form-select" formControlName="empresaTipo">
             <option value="">Seleccionar</option>
             <option value="publica">Pública</option>
             <option value="privada">Privada</option>
@@ -45,24 +57,26 @@
 
         <div class="form-group">
           <label for="provincia">PROVINCIA/CIUDAD</label>
-          <input id="provincia" type="text" formControlName="provincia" placeholder="Ingresar">
+          <input id="provincia" type="text" class="form-control" formControlName="provincia" placeholder="Ingresar">
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
           <label for="tipoInstitucion">TIPO DE EMPRESA/INSTITUCIÓN</label>
-          <select id="tipoInstitucion" formControlName="tipoInstitucion">
+          <select id="tipoInstitucion" class="form-select" formControlName="tipoInstitucion" [disabled]="true">
             <option value="">Seleccionar</option>
-            <option value="pequeña">Pequeña</option>
-            <option value="mediana">Mediana</option>
-            <option value="grande">Grande</option>
+            <option value="Micro">Micro</option>
+            <option value="Pequeña">Pequeña</option>
+            <option value="Mediana A">Mediana A</option>
+            <option value="Mediana B">Mediana B</option>
+            <option value="Grande">Grande</option>
           </select>
         </div>
 
         <div class="form-group">
           <label for="comiteParitario">COMITÉ PARITARIO</label>
-          <select id="comiteParitario" formControlName="comiteParitario">
+          <select id="comiteParitario" class="form-select" formControlName="comiteParitario">
             <option value="">Seleccionar</option>
             <option value="si">Sí</option>
             <option value="no">No</option>
@@ -73,7 +87,7 @@
       <div class="form-row">
         <div class="form-group">
           <label for="monitorSeguridad">MONITOR O TÉCNICO DE SEGURIDAD E HIGIENE</label>
-          <select id="monitorSeguridad" formControlName="monitorSeguridad">
+          <select id="monitorSeguridad" class="form-select" formControlName="monitorSeguridad">
             <option value="">Seleccionar</option>
             <option value="si">Sí</option>
             <option value="no">No</option>
@@ -82,18 +96,43 @@
 
         <div class="form-group">
           <label for="personalSalud">PERSONAL DE SALUD EN LA EMPRESA</label>
-          <select id="personalSalud" formControlName="personalSalud">
+          <select id="personalSalud" class="form-select" formControlName="personalSalud">
             <option value="">Seleccionar</option>
             <option value="si">Sí</option>
             <option value="no">No</option>
           </select>
         </div>
       </div>
+
+      <!-- Campos calculados -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>NÚMERO DE TRABAJADORES</label>
+          <input type="number" class="form-control" formControlName="numeroTrabajadores" [readonly]="true" placeholder="Número de trabajadores">
+        </div>
+
+        <div class="form-group">
+          <label>NIVEL DE RIESGO</label>
+          <input type="text" class="form-control" formControlName="nivelDeRiesgo" [readonly]="true" placeholder="Nivel de riesgo">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>HORAS MÍNIMAS DE GESTIÓN EN SEGURIDAD</label>
+          <input type="text" class="form-control" formControlName="horasMinimasGestion" [readonly]="true" placeholder="Horas mínimas de gestión">
+        </div>
+
+        <div class="form-group">
+          <label>PERSONAL DE SALUD EN EL TRABAJO</label>
+          <textarea class="form-control" formControlName="personalSaludDetalles" [readonly]="true" rows="3" placeholder="Detalles del personal de salud"></textarea>
+        </div>
+      </div>
     </div>
 
-    <div class="button-group">
-      <button type="button" class="btn-secondary" (click)="regresar()">REGRESAR</button>
-      <button type="button" class="btn-secondary" (click)="continuar()">CONTINUAR</button>
+    <div class="button-group mt-4">
+      <button type="button" class="btn btn-secondary me-2" (click)="regresar()">REGRESAR</button>
+      <button type="button" class="btn btn-primary" (click)="continuar()">CONTINUAR</button>
     </div>
   </form>
 </div>
