@@ -1,0 +1,142 @@
+/* Hero Section */
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 50px;
+    background: rgb(0, 65, 112);
+    color: #fff;
+}
+
+.hero-content {
+    flex: 1;
+    max-width: 50%;
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.hero-content h1 span {
+    color: #ffd700;
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+}
+
+.hero-image {
+    flex: 1;
+    text-align: right;
+}
+
+.hero-image img {
+    max-width: 90%;
+    height: auto;
+}
+
+/* Services Section */
+.services {
+    padding: 4rem 5%;
+}
+
+.services h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 3rem;
+    color: var(--primary-color);
+}
+
+.service-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.card {
+    background: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.card h3 {
+    padding: 1rem;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+}
+
+.card .btn-ir {
+    margin: 1rem;
+    padding: 0.7rem 1.5rem;
+    background-color: var(--accent-color);
+    color: var(--white);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.card .btn-ir:hover {
+    background-color: darkorange;
+}
+
+/* Technology Section */
+.technology {
+    display: flex;
+    align-items: center;
+    padding: 50px;
+    background: #fff5e1;
+    color: #333;
+}
+
+.technology .tech-content {
+    flex: 1;
+    max-width: 50%;
+}
+
+.technology h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #444;
+}
+
+.technology h2 span {
+    color: #ff5733;
+}
+
+.technology ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.technology ul li {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.technology .tech-image {
+    flex: 1;
+    text-align: center;
+}
+
+.technology .tech-image img {
+    max-width: 90%;
+    height: auto;
+}

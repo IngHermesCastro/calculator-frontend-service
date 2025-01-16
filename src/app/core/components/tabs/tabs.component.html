@@ -1,0 +1,26 @@
+<div id="container">
+    <div id="logo-container" (click)="navegar('')">
+        <img src="/assets/logo.png" alt="logo" class="logo-image">
+    </div>
+    
+    <div id="tabs-container">
+        <div class="tab" 
+             (click)="navegar('')" 
+             [ngClass]="{seleccionado: seleccionado[0]}"
+             role="button">
+            <mat-icon>home</mat-icon> Principal
+        </div>
+        <div class="tab" 
+             (click)="navegar('seguridad-higiene')" 
+             [ngClass]="{seleccionado: seleccionado[2]}"
+             role="button">
+            <mat-icon>security</mat-icon> Seguridad e Higiene
+        </div>
+        <div class="tab" 
+             (click)="navegar('login')" 
+             [ngClass]="{seleccionado: seleccionado[1]}"
+             role="button">
+            <mat-icon>login</mat-icon> Log-In
+        </div>
+    </div>
+</div>

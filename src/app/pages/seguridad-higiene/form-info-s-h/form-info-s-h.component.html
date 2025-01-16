@@ -1,0 +1,99 @@
+<div class="container">
+  <h2>SEGURIDAD E HIGIENE</h2>
+  <h3>FORMULARIO</h3>
+
+  <form [formGroup]="form">
+    <div class="form-section">
+      <h4>INFORMACIÓN EMPRESA</h4>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nombreEmpresa">NOMBRE EMPRESA</label>
+          <input id="nombreEmpresa" type="text" formControlName="nombreEmpresa" placeholder="Ingresar">
+        </div>
+
+        <div class="form-group">
+          <label for="correoElectronico">CORREO ELECTRÓNICO</label>
+          <input id="correoElectronico" type="email" formControlName="correoElectronico" placeholder="Ingresar">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="actividadEconomica">ACTIVIDAD ECONÓMICA</label>
+          <input id="actividadEconomica" type="text" formControlName="actividadEconomica" placeholder="Ingresar">
+        </div>
+
+        <div class="form-group">
+          <label>CANTIDAD TRABAJADORES HOMBRES/MUJERES</label>
+          <div class="sub-group">
+            <input type="number" formControlName="cantidadHombres" placeholder="Hombres">
+            <input type="number" formControlName="cantidadMujeres" placeholder="Mujeres">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="empresaTipo">EMPRESA PÚBLICA/PRIVADA</label>
+          <select id="empresaTipo" formControlName="empresaTipo">
+            <option value="">Seleccionar</option>
+            <option value="publica">Pública</option>
+            <option value="privada">Privada</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="provincia">PROVINCIA/CIUDAD</label>
+          <input id="provincia" type="text" formControlName="provincia" placeholder="Ingresar">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="tipoInstitucion">TIPO DE EMPRESA/INSTITUCIÓN</label>
+          <select id="tipoInstitucion" formControlName="tipoInstitucion">
+            <option value="">Seleccionar</option>
+            <option value="pequeña">Pequeña</option>
+            <option value="mediana">Mediana</option>
+            <option value="grande">Grande</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="comiteParitario">COMITÉ PARITARIO</label>
+          <select id="comiteParitario" formControlName="comiteParitario">
+            <option value="">Seleccionar</option>
+            <option value="si">Sí</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="monitorSeguridad">MONITOR O TÉCNICO DE SEGURIDAD E HIGIENE</label>
+          <select id="monitorSeguridad" formControlName="monitorSeguridad">
+            <option value="">Seleccionar</option>
+            <option value="si">Sí</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="personalSalud">PERSONAL DE SALUD EN LA EMPRESA</label>
+          <select id="personalSalud" formControlName="personalSalud">
+            <option value="">Seleccionar</option>
+            <option value="si">Sí</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button type="button" class="btn-secondary" (click)="regresar()">REGRESAR</button>
+      <button type="button" class="btn-secondary" (click)="continuar()">CONTINUAR</button>
+    </div>
+  </form>
+</div>

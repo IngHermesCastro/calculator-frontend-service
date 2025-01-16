@@ -1,0 +1,88 @@
+{
+  "riesgos": {
+    "A0111.11": {
+      "descripcion": "cultivo Trigo",
+      "nivel_de_riesgo": "Bajo"
+    },
+    "A0111.12": {
+      "descripcion": "cultivo maíz",
+      "nivel_de_riesgo": "Bajo"
+    },
+    "A0111.13": {
+      "descripcion": "cultivo quinua",
+      "nivel_de_riesgo": "Bajo"
+    },
+    "A0111.19": {
+      "descripcion": "cultivo otros cereales (sorgo, cebada, centeno, avena, mijo, etc.)",
+      "nivel_de_riesgo": "Bajo"
+    },
+    "A0111.21": {
+      "descripcion": "cultivo frijol",
+      "nivel_de_riesgo": "Bajo"
+    },
+    "A0111.22": {
+      "descripcion": "cultivo arveja",
+      "nivel_de_riesgo": "Bajo"
+    },
+    "A0111.23": {
+      "descripcion": "cultivo lenteja",
+      "nivel_de_riesgo": "Bajo"
+    },
+    "A0111.29": {
+      "descripcion": "cultivo otras legumbres (habas, garbanzos, vainitas, chocho)",
+      "nivel_de_riesgo": "Bajo"
+    },
+    "A0111.31": {
+      "descripcion": "cultivo granos y semillas de soya",
+      "nivel_de_riesgo": "Bajo"
+    },
+    "A0111.32": {
+      "descripcion": "cultivo semillas de maní",
+      "nivel_de_riesgo": "Bajo"
+    },
+    "A0111.39": {
+      "descripcion": "cultivo otras semillas oleaginosas (ricino, linaza, mostaza, girasol, ajonjolí, colza, cártamo, níger)",
+      "nivel_de_riesgo": "Bajo"
+    },
+    "A0112.00": {
+      "descripcion": "cultivo arroz (orgánico y genéticamente modificado)",
+      "nivel_de_riesgo": "Bajo"
+    },
+    "A0113.11": {
+      "descripcion": "cultivo brócoli, col y coliflor",
+      "nivel_de_riesgo": "Bajo"
+    },
+    "A0113.12": {
+      "descripcion": "cultivo alcachofa y espárrago",
+      "nivel_de_riesgo": "Bajo"
+    },
+    "A0113.19": {
+      "descripcion": "cultivo otras hortalizas de hoja o de tallo (espinaca, lechuga, berros, apio, perejil, acelga)",
+      "nivel_de_riesgo": "Bajo"
+    },
+    "A0113.21": {
+      "descripcion": "cultivo tomates (excepto tomate de árbol), pepinillos y similares",
+      "nivel_de_riesgo": "Bajo"
+    },
+    "A0113.22": {
+      "descripcion": "cultivo sandías y melones",
+      "nivel_de_riesgo": "Bajo"
+    },
+    "A0113.29": {
+      "descripcion": "cultivo otras hortalizas de fruto (zapallo, sambo, zuquini, berenjenas)",
+      "nivel_de_riesgo": "Bajo"
+    },
+    "A0113.31": {
+      "descripcion": "cultivo Cebollas paiteñas, cebollas perla, cebollas en rama (puerros), ajos",
+      "nivel_de_riesgo": "Bajo"
+    },
+    "A0113.32": {
+      "descripcion": "cultivo Zanahoria amarilla, rábano, remolacha (beterraba)",
+      "nivel_de_riesgo": "Bajo"
+    },
+    "A0113.39": {
+      "descripcion": "cultivo otras hortalizas de raíces bulbosas o tuberosas (papanabo)",
+      "nivel_de_riesgo": "Bajo"
+    }
+  }
+}
