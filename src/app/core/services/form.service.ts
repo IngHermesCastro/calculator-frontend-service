@@ -27,7 +27,6 @@ export class RiesgosService {
       tipoInstitucion: [{ value: '', disabled: true }, Validators.required],
       comiteParitario: ['', Validators.required],
       monitorSeguridad: ['', Validators.required],
-      personalSalud: ['', Validators.required],
       indiceFrecuencia: [{ value: 0, disabled: true }, Validators.min(0)],
       indiceGravedad: [{ value: 0, disabled: true }, Validators.min(0)],
       tasaRiesgo: [{ value: 0, disabled: true }, Validators.min(0)],
@@ -36,7 +35,7 @@ export class RiesgosService {
       observacionesCSeguros: [{ value: 0, disabled: true }, Validators.min(0)],
       correcionConInseguras: [{ value: 0, disabled: true }, Validators.min(0)],
       cumplimientoUsoEPP: [{ value: 0, disabled: true }, Validators.min(0)],
-      numeroTrabajadores: [{ value: 0, disabled: true }, Validators.min(0)],
+      numeroTrabajadores: [{ value: '', disabled: true }],
       nivelDeRiesgo: [{ value: '', disabled: true }],
       horasMinimasGestion: [{ value: '', disabled: true }],
       personalSaludDetalles: [{ value: '', disabled: true }]
@@ -210,19 +209,61 @@ export class RiesgosService {
     }
   }
 
+  determinarRangoTrabajadores(total: number): string {
+    if (total >= 1 && total <= 9) return "1 a 9";
+    if (total >= 10 && total <= 49) return "10 a 49";
+    if (total >= 50 && total <= 99) return "50 a 99";
+    if (total >= 100 && total <= 199) return "100-199";
+    if (total >= 200) return "200 en adelante";
+    return '';
+  }
+
+  determinarMonitorTecnico(tipoInstitucion: string, nivelDeRiesgo: string, totalTrabajadores: number): string {
+    let monitorTecnico = '';
+
+    if (tipoInstitucion === 'Micro') {
+      if (nivelDeRiesgo.toLowerCase().includes('bajo') || nivelDeRiesgo.toLowerCase().includes('medio')) {
+        monitorTecnico = 'Un monitor de seguridad e higiene del trabajo por lugar y/o centro de trabajo';
+      } else {
+        monitorTecnico = 'Un técnico de seguridad e higiene del trabajo';
+      }
+    } else if (tipoInstitucion === 'Pequeña') {
+      if (nivelDeRiesgo.toLowerCase().includes('bajo') || nivelDeRiesgo.toLowerCase().includes('medio')) {
+        monitorTecnico = 'Un monitor de seguridad e higiene del trabajo por lugar y/o centro de trabajo';
+      } else {
+        monitorTecnico = 'Un técnico de seguridad e higiene del trabajo';
+      }
+    } else if (tipoInstitucion === 'Mediana A') {
+      monitorTecnico = 'Un técnico de seguridad e higiene del trabajo';
+    } else if (tipoInstitucion === 'Mediana B') {
+      monitorTecnico = 'Un técnico de seguridad e higiene del trabajo';
+    } else if (tipoInstitucion === 'Grande') {
+      if (nivelDeRiesgo.toLowerCase().includes('bajo') || nivelDeRiesgo.toLowerCase().includes('medio')) {
+        monitorTecnico = `Un técnico de seguridad e higiene del trabajo y, por cada 200 trabajadores un técnico adicional`;
+      } else {
+        monitorTecnico = `Un técnico de seguridad e higiene del trabajo y, por cada 100 trabajadores un técnico adicional`;
+      }
+    }
+
+    return monitorTecnico;
+  }
+
   actualizarCamposCalculados(formValue: any) {
     const totalTrabajadores = this.calcularNumeroTrabajadores(formValue.cantidadHombres, formValue.cantidadMujeres);
     const tipoInstitucion = this.setTipoEmpresa(totalTrabajadores);
     const nivelDeRiesgo = this.obtenerNivelDeRiesgo(tipoInstitucion, formValue.actividadEconomica);
     const horasMinimasGestion = this.obtenerHorasMinimasGestion(tipoInstitucion, nivelDeRiesgo);
     const personalSaludDetalles = this.obtenerPersonalSaludDetalles(tipoInstitucion, totalTrabajadores);
+    let rangoTrabajadores = this.determinarRangoTrabajadores(totalTrabajadores);
+    const monitorSeguridad = this.determinarMonitorTecnico(tipoInstitucion, nivelDeRiesgo, totalTrabajadores);
 
     this.form.patchValue({
       tipoInstitucion: tipoInstitucion,
-      numeroTrabajadores: totalTrabajadores,
+      numeroTrabajadores: rangoTrabajadores,
       nivelDeRiesgo: nivelDeRiesgo,
       horasMinimasGestion: horasMinimasGestion,
       personalSaludDetalles: personalSaludDetalles,
+      monitorSeguridad: monitorSeguridad
     }, { emitEvent: false });
   }
 }

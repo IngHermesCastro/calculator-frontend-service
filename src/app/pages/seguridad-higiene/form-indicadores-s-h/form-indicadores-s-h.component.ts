@@ -36,29 +36,30 @@ export class FormIndicadoresSHComponent {
         denominador: [, [Validators.required, Validators.min(1)]],
         resultado: [0]
       }),
+      // Making these fields optional by removing Validators.required
       capacitacionesSeguridad: this.fb.group({
-        numerador: [, [Validators.required, Validators.min(0)]],
-        denominador: [, [Validators.required, Validators.min(1)]],
+        numerador: [, [Validators.min(0)]],
+        denominador: [, [Validators.min(1)]],
         resultado: [0]
       }),
       inspeccionesSeguridad: this.fb.group({
-        numerador: [, [Validators.required, Validators.min(0)]],
-        denominador: [, [Validators.required, Validators.min(1)]],
+        numerador: [, [Validators.min(0)]],
+        denominador: [, [Validators.min(1)]],
         resultado: [0]
       }),
       observacionesCSeguros: this.fb.group({
-        numerador: [, [Validators.required, Validators.min(0)]],
-        denominador: [, [Validators.required, Validators.min(1)]],
+        numerador: [, [Validators.min(0)]],
+        denominador: [, [Validators.min(1)]],
         resultado: [0]
       }),
       correcionConInseguras: this.fb.group({
-        numerador: [, [Validators.required, Validators.min(0)]],
-        denominador: [, [Validators.required, Validators.min(1)]],
+        numerador: [, [Validators.min(0)]],
+        denominador: [, [Validators.min(1)]],
         resultado: [0]
       }),
       cumplimientoUsoEPP: this.fb.group({
-        numerador: [, [Validators.required, Validators.min(0)]],
-        denominador: [, [Validators.required, Validators.min(1)]],
+        numerador: [, [Validators.min(0)]],
+        denominador: [, [Validators.min(1)]],
         resultado: [0]
       })
     });
@@ -78,7 +79,20 @@ export class FormIndicadoresSHComponent {
     if (controls) {
       const numerador = controls.get('numerador')?.value || 0;
       const denominador = controls.get('denominador')?.value || 1;
-      const resultado = denominador > 0 ? (numerador / denominador) * 100 : 0;
+      let resultado = 0;
+      switch (indicador) {
+        case 'indiceFrecuencia':
+          resultado = denominador > 0 ? ((numerador * 200) / denominador) * 100 : 0;
+          break;
+        case 'indiceGravedad':
+          resultado = denominador > 0 ? ((numerador * 200) / denominador) * 100 : 0;
+          break;
+        case 'tasaRiesgo':
+          resultado = denominador > 0 ? (numerador / denominador) : 0;
+          break;
+        default:
+          resultado = denominador > 0 ? (numerador / denominador) * 100 : 0;
+      }
       controls.patchValue({ resultado: resultado.toFixed(2) }, { emitEvent: false });
     }
   }

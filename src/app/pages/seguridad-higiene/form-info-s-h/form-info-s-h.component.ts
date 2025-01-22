@@ -32,9 +32,8 @@ export class FormInfoSHComponent implements OnInit {
       provincia: ['', Validators.required],
       tipoInstitucion: [{ value: '', disabled: true }],
       comiteParitario: ['', Validators.required],
-      monitorSeguridad: ['', Validators.required],
-      personalSalud: ['', Validators.required],
-      numeroTrabajadores: [{ value: 0, disabled: true }],
+      monitorSeguridad: [{ value: '', disabled: true }],
+      numeroTrabajadores: [{ value: '', disabled: true }],
       nivelDeRiesgo: [{ value: '', disabled: true }],
       horasMinimasGestion: [{ value: '', disabled: true }],
       personalSaludDetalles: [{ value: '', disabled: true }]
@@ -72,21 +71,23 @@ export class FormInfoSHComponent implements OnInit {
     const cantidadHombres = formValue.cantidadHombres || 0;
     const cantidadMujeres = formValue.cantidadMujeres || 0;
     const totalTrabajadores = cantidadHombres + cantidadMujeres;
-    
+    const rangoTrabajadores = this._formSvc.determinarRangoTrabajadores(totalTrabajadores);
+
     const tipoInstitucion = this._formSvc.setTipoEmpresa(totalTrabajadores);
     const nivelDeRiesgo = this.actividadSeleccionada?.nivel_de_riesgo || '';
-    console.log('Nivel de riesgo:', nivelDeRiesgo);
-    console.log('Tipo de institución:', tipoInstitucion);
     const horasMinimasGestion = this._formSvc.obtenerHorasMinimasGestion(tipoInstitucion, nivelDeRiesgo);
-    console.log('Horas mínimas de gestión:', horasMinimasGestion);
     const personalSaludDetalles = this._formSvc.obtenerPersonalSaludDetalles(tipoInstitucion, totalTrabajadores);
-  
+    const monitorSeguridad = this._formSvc.determinarMonitorTecnico(tipoInstitucion, nivelDeRiesgo, totalTrabajadores);
+    console.log('Monitor de seguridad:', monitorSeguridad);
+
     this.form.patchValue({
-      numeroTrabajadores: totalTrabajadores,
+
+      numeroTrabajadores: rangoTrabajadores,
       tipoInstitucion: tipoInstitucion,
       nivelDeRiesgo: nivelDeRiesgo,
       horasMinimasGestion: horasMinimasGestion,
-      personalSaludDetalles: personalSaludDetalles
+      personalSaludDetalles: personalSaludDetalles,
+      monitorSeguridad: monitorSeguridad
     });
   }
 
@@ -97,19 +98,25 @@ export class FormInfoSHComponent implements OnInit {
       map(term => {
         return term === '' ? []
           : this.todasLasActividades
-              .filter(actividad => actividad.descripcion.toLowerCase().includes(term.toLowerCase()))
-              .slice(0, 10);
+            .filter(actividad => (`${actividad.id} ${actividad.descripcion}`).toLowerCase().includes(term.toLowerCase()))
+            .slice(0, 10);
       })
     );
 
-  formatearActividad = (actividad: Riesgo) => actividad.descripcion;
+  formatearActividad = (actividad: Riesgo | null) => {
+    if (actividad && actividad.id && actividad.descripcion) {
+      return `(${actividad.id}) ${actividad.descripcion}`;
+    } else {
+      return '';
+    }
+  };
 
   seleccionarActividad(event: { item: Riesgo, preventDefault: Function }) {
     const actividad = event.item;
     if (actividad && actividad.descripcion) {
       this.actividadSeleccionada = actividad;
       this.form.patchValue({
-        actividadEconomica: actividad.descripcion
+        actividadEconomica: this.formatearActividad(actividad)
       });
       this.actualizarCamposCalculados();
     } else {

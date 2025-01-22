@@ -18,7 +18,7 @@ export interface Form {
     observacionesCSeguros: number;
     correcionConInseguras: number;
     cumplimientoUsoEPP: number;
-    numeroTrabajadores: number;
+    numeroTrabajadores: string;
     nivelDeRiesgo: string;
     horasMinimasGestion: string;
     personalSaludDetalles: string;

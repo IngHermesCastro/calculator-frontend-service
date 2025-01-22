@@ -76,9 +76,48 @@ select {
 }
 
 .sub-group {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sub-group label {
+  margin-bottom: 0;
+  font-weight: normal;
+  font-size: 14px;
+  color: #495057;
+}
+
+.sub-group input {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #495057;
+  background-color: #fff;
+}
+
+.input-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+.input-group .sub-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.input-group .sub-group label {
+  margin-bottom: 0; /* Remove bottom margin to align label with input */
+  font-weight: normal; /* Adjust font weight if needed */
+  font-size: 14px; /* Match input font size */
+  color: #495057; /* Match input text color */
+}
+
+.input-group .sub-group input {
+  flex-grow: 1; /* Makes input take available space */
 }
 
 .button-group {

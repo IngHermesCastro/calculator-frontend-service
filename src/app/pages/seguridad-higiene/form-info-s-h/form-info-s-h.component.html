@@ -39,8 +39,14 @@
         <div class="form-group">
           <label>CANTIDAD TRABAJADORES HOMBRES/MUJERES</label>
           <div class="input-group">
-            <input type="number" class="form-control" formControlName="cantidadHombres" placeholder="Hombres">
-            <input type="number" class="form-control" formControlName="cantidadMujeres" placeholder="Mujeres">
+            <div class="sub-group">
+              <label for="cantidadHombres">Hombres</label>
+              <input type="number" id="cantidadHombres" class="form-control" formControlName="cantidadHombres" value="0" min="0">
+            </div>
+            <div class="sub-group">
+              <label for="cantidadMujeres">Mujeres</label>
+              <input type="number" id="cantidadMujeres" class="form-control" formControlName="cantidadMujeres" value="0" min="0">
+            </div>
           </div>
         </div>
       </div>
@@ -87,28 +93,14 @@
       <div class="form-row">
         <div class="form-group">
           <label for="monitorSeguridad">MONITOR O TÉCNICO DE SEGURIDAD E HIGIENE</label>
-          <select id="monitorSeguridad" class="form-select" formControlName="monitorSeguridad">
-            <option value="">Seleccionar</option>
-            <option value="si">Sí</option>
-            <option value="no">No</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="personalSalud">PERSONAL DE SALUD EN LA EMPRESA</label>
-          <select id="personalSalud" class="form-select" formControlName="personalSalud">
-            <option value="">Seleccionar</option>
-            <option value="si">Sí</option>
-            <option value="no">No</option>
-          </select>
+          <textarea id="monitorSeguridad" class="form-control" type="text" placeholder="Monitor o Técnico de Seguridad e Higiene" formControlName="monitorSeguridad" [disabled]="true" readonly></textarea>
         </div>
       </div>
 
-      <!-- Campos calculados -->
       <div class="form-row">
         <div class="form-group">
           <label>NÚMERO DE TRABAJADORES</label>
-          <input type="number" class="form-control" formControlName="numeroTrabajadores" [readonly]="true" placeholder="Número de trabajadores">
+          <input type="text" class="form-control" formControlName="numeroTrabajadores" [readonly]="true" placeholder="Número de trabajadores">
         </div>
 
         <div class="form-group">
