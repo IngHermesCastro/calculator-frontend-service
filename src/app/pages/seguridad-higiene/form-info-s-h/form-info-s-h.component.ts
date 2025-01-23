@@ -1,3 +1,4 @@
+// src/app/components/form-info-s-h/form-info-s-h.component.ts
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -7,6 +8,7 @@ import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { Riesgo } from 'src/app/core/interfaces/riesgos';
+import { Provincia } from 'src/app/core/interfaces/provincias';
 
 @Component({
   selector: 'app-form-info-s-h',
@@ -19,6 +21,8 @@ export class FormInfoSHComponent implements OnInit {
   form!: FormGroup;
   todasLasActividades: Riesgo[] = [];
   actividadSeleccionada: Riesgo | null = null;
+  provincias: Provincia[] = [];
+  ciudades: { id: string; name: string; }[] = [];
   private readonly _formSvc = inject(RiesgosService);
 
   constructor(private fb: FormBuilder, private router: Router) {
@@ -30,6 +34,7 @@ export class FormInfoSHComponent implements OnInit {
       cantidadMujeres: [0, [Validators.required, Validators.min(0)]],
       empresaTipo: ['', Validators.required],
       provincia: ['', Validators.required],
+      ciudad: ['', Validators.required],
       tipoInstitucion: [{ value: '', disabled: true }],
       comiteParitario: ['', Validators.required],
       monitorSeguridad: [{ value: '', disabled: true }],
@@ -41,6 +46,7 @@ export class FormInfoSHComponent implements OnInit {
   }
 
   ngOnInit() {
+    // Load activities
     this._formSvc.obtenerTodasLasActividades().subscribe({
       next: (actividades) => {
         this.todasLasActividades = actividades;
@@ -51,6 +57,32 @@ export class FormInfoSHComponent implements OnInit {
       }
     });
 
+    // Load provinces
+    this._formSvc.obtenerTodasLasProvincias().subscribe({
+      next: (provincias) => {
+        this.provincias = provincias;
+        console.log('Provincias cargadas:', this.provincias);
+      },
+      error: (error) => {
+        console.error('Error al cargar provincias:', error);
+      }
+    });
+
+    // Watch for province changes
+    this.form.get('provincia')?.valueChanges.subscribe((provinciaId) => {
+      if (provinciaId) {
+        const provincia = this.provincias.find(p => p.id === provinciaId);
+        if (provincia) {
+          this.ciudades = provincia.cities;
+          this.form.patchValue({ ciudad: '' }); // Reset city selection
+        }
+      } else {
+        this.ciudades = [];
+        this.form.patchValue({ ciudad: '' });
+      }
+    });
+
+    // Watch for worker count changes
     this.form.get('cantidadHombres')?.valueChanges.subscribe(() => {
       this.actualizarCamposCalculados();
     });
@@ -78,10 +110,8 @@ export class FormInfoSHComponent implements OnInit {
     const horasMinimasGestion = this._formSvc.obtenerHorasMinimasGestion(tipoInstitucion, nivelDeRiesgo);
     const personalSaludDetalles = this._formSvc.obtenerPersonalSaludDetalles(tipoInstitucion, totalTrabajadores);
     const monitorSeguridad = this._formSvc.determinarMonitorTecnico(tipoInstitucion, nivelDeRiesgo, totalTrabajadores);
-    console.log('Monitor de seguridad:', monitorSeguridad);
 
     this.form.patchValue({
-
       numeroTrabajadores: rangoTrabajadores,
       tipoInstitucion: tipoInstitucion,
       nivelDeRiesgo: nivelDeRiesgo,
@@ -98,14 +128,14 @@ export class FormInfoSHComponent implements OnInit {
       map(term => {
         return term === '' ? []
           : this.todasLasActividades
-            .filter(actividad => (`${actividad.id} ${actividad.descripcion}`).toLowerCase().includes(term.toLowerCase()))
+            .filter(actividad => `${actividad.id} ${actividad.descripcion}`.toLowerCase().includes(term.toLowerCase()))
             .slice(0, 10);
       })
     );
 
   formatearActividad = (actividad: Riesgo | null) => {
     if (actividad && actividad.id && actividad.descripcion) {
-      return `(${actividad.id}) ${actividad.descripcion}`;
+      return `${actividad.id} ${actividad.descripcion}`;
     } else {
       return '';
     }

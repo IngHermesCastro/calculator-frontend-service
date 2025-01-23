@@ -5,6 +5,7 @@ import { Form } from '../interfaces/form';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { Riesgo } from '../interfaces/riesgos';
+import { Provincia } from '../interfaces/provincias';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ export class RiesgosService {
   private readonly _firestore = inject(Firestore);
   private readonly _formCollection = collection(this._firestore, 'forms');
   private readonly _riesgosCollection = collection(this._firestore, 'riesgos');
+  private readonly _provinciasCollection = collection(this._firestore, 'provincias')
   form: FormGroup;
 
   constructor(private fb: FormBuilder) {
@@ -24,9 +26,10 @@ export class RiesgosService {
       cantidadMujeres: [0, [Validators.required, Validators.min(0)]],
       empresaTipo: ['', Validators.required],
       provincia: ['', Validators.required],
+      ciudad: ['', Validators.required],
       tipoInstitucion: [{ value: '', disabled: true }, Validators.required],
       comiteParitario: ['', Validators.required],
-      monitorSeguridad: ['', Validators.required],
+      monitorSeguridad: [{ value: '', disabled: true }, Validators.min(0)],
       indiceFrecuencia: [{ value: 0, disabled: true }, Validators.min(0)],
       indiceGravedad: [{ value: 0, disabled: true }, Validators.min(0)],
       tasaRiesgo: [{ value: 0, disabled: true }, Validators.min(0)],
@@ -60,6 +63,10 @@ export class RiesgosService {
 
   obtenerTodasLasActividades(): Observable<Riesgo[]> {
     return collectionData(this._riesgosCollection, { idField: 'id' }) as Observable<Riesgo[]>;
+  }
+
+  obtenerTodasLasProvincias(): Observable<Provincia[]> {
+    return collectionData(this._provinciasCollection, { idField: 'id' }) as Observable<Provincia[]>;
   }
 
   buscarActividades(searchTerm: string): Observable<Riesgo[]> {

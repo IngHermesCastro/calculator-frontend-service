@@ -1,7 +1,6 @@
 <div class="container">
   <h2>SEGURIDAD E HIGIENE</h2>
   <h3>FORMULARIO</h3>
-
   <form [formGroup]="form">
     <div class="form-section">
       <h4>INFORMACIÓN EMPRESA</h4>
@@ -9,28 +8,51 @@
       <div class="form-row">
         <div class="form-group">
           <label for="nombreEmpresa">NOMBRE EMPRESA</label>
-          <input id="nombreEmpresa" type="text" class="form-control" formControlName="nombreEmpresa" placeholder="Ingresar">
+          <input 
+            id="nombreEmpresa" 
+            type="text" 
+            class="form-control" 
+            formControlName="nombreEmpresa" 
+            placeholder="Ingresar"
+          >
+          <div class="invalid-feedback" *ngIf="form.get('nombreEmpresa')?.touched && form.get('nombreEmpresa')?.errors?.['required']">
+            El nombre de la empresa es requerido
+          </div>
         </div>
 
         <div class="form-group">
           <label for="correoElectronico">CORREO ELECTRÓNICO</label>
-          <input id="correoElectronico" type="email" class="form-control" formControlName="correoElectronico" placeholder="Ingresar">
+          <input 
+            id="correoElectronico" 
+            type="email" 
+            class="form-control" 
+            formControlName="correoElectronico" 
+            placeholder="Ingresar"
+          >
+          <div class="invalid-feedback" *ngIf="form.get('correoElectronico')?.touched && form.get('correoElectronico')?.errors?.['required']">
+            El correo electrónico es requerido
+          </div>
+          <div class="invalid-feedback" *ngIf="form.get('correoElectronico')?.touched && form.get('correoElectronico')?.errors?.['email']">
+            Ingrese un correo electrónico válido
+          </div>
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
           <label for="actividadEconomica">ACTIVIDAD ECONÓMICA</label>
-          <input id="actividadEconomica"
-                  type="text"
-                  class="form-control"
-                  formControlName="actividadEconomica"
-                  [ngbTypeahead]="buscarActividad"
-                  [inputFormatter]="formatearActividad"
-                  [resultFormatter]="formatearActividad"
-                  (selectItem)="seleccionarActividad($event)"
-                  [class.is-invalid]="form.get('actividadEconomica')?.touched && !actividadSeleccionada"
-                  placeholder="Buscar actividad económica">
+          <input 
+            id="actividadEconomica"
+            type="text"
+            class="form-control"
+            formControlName="actividadEconomica"
+            [ngbTypeahead]="buscarActividad"
+            [inputFormatter]="formatearActividad"
+            [resultFormatter]="formatearActividad"
+            (selectItem)="seleccionarActividad($event)"
+            [class.is-invalid]="form.get('actividadEconomica')?.touched && !actividadSeleccionada"
+            placeholder="Buscar actividad económica"
+          >
           <div class="invalid-feedback" *ngIf="form.get('actividadEconomica')?.touched && !actividadSeleccionada">
             Debe seleccionar una actividad económica válida
           </div>
@@ -41,11 +63,31 @@
           <div class="input-group">
             <div class="sub-group">
               <label for="cantidadHombres">Hombres</label>
-              <input type="number" id="cantidadHombres" class="form-control" formControlName="cantidadHombres" value="0" min="0">
+              <input 
+                type="number" 
+                id="cantidadHombres" 
+                class="form-control" 
+                formControlName="cantidadHombres" 
+                value="0" 
+                min="0"
+              >
+              <div class="invalid-feedback" *ngIf="form.get('cantidadHombres')?.touched && form.get('cantidadHombres')?.errors?.['min']">
+                La cantidad debe ser mayor o igual a 0
+              </div>
             </div>
             <div class="sub-group">
               <label for="cantidadMujeres">Mujeres</label>
-              <input type="number" id="cantidadMujeres" class="form-control" formControlName="cantidadMujeres" value="0" min="0">
+              <input 
+                type="number" 
+                id="cantidadMujeres" 
+                class="form-control" 
+                formControlName="cantidadMujeres" 
+                value="0" 
+                min="0"
+              >
+              <div class="invalid-feedback" *ngIf="form.get('cantidadMujeres')?.touched && form.get('cantidadMujeres')?.errors?.['min']">
+                La cantidad debe ser mayor o igual a 0
+              </div>
             </div>
           </div>
         </div>
@@ -59,15 +101,39 @@
             <option value="publica">Pública</option>
             <option value="privada">Privada</option>
           </select>
+          <div class="invalid-feedback" *ngIf="form.get('empresaTipo')?.touched && form.get('empresaTipo')?.errors?.['required']">
+            Debe seleccionar el tipo de empresa
+          </div>
         </div>
 
         <div class="form-group">
-          <label for="provincia">PROVINCIA/CIUDAD</label>
-          <input id="provincia" type="text" class="form-control" formControlName="provincia" placeholder="Ingresar">
+          <label for="provincia">PROVINCIA</label>
+          <select id="provincia" class="form-select" formControlName="provincia">
+            <option value="">Seleccionar Provincia</option>
+            <option *ngFor="let provincia of provincias" [value]="provincia.id">
+              {{provincia.name}}
+            </option>
+          </select>
+          <div class="invalid-feedback" *ngIf="form.get('provincia')?.touched && form.get('provincia')?.errors?.['required']">
+            Debe seleccionar una provincia
+          </div>
         </div>
       </div>
 
       <div class="form-row">
+        <div class="form-group">
+          <label for="ciudad">CIUDAD</label>
+          <select id="ciudad" class="form-select" formControlName="ciudad">
+            <option value="">Seleccionar Ciudad</option>
+            <option *ngFor="let ciudad of ciudades" [value]="ciudad.id">
+              {{ciudad.name}}
+            </option>
+          </select>
+          <div class="invalid-feedback" *ngIf="form.get('ciudad')?.touched && form.get('ciudad')?.errors?.['required']">
+            Debe seleccionar una ciudad
+          </div>
+        </div>
+
         <div class="form-group">
           <label for="tipoInstitucion">TIPO DE EMPRESA/INSTITUCIÓN</label>
           <select id="tipoInstitucion" class="form-select" formControlName="tipoInstitucion" [disabled]="true">
@@ -79,7 +145,9 @@
             <option value="Grande">Grande</option>
           </select>
         </div>
+      </div>
 
+      <div class="form-row">
         <div class="form-group">
           <label for="comiteParitario">COMITÉ PARITARIO</label>
           <select id="comiteParitario" class="form-select" formControlName="comiteParitario">
@@ -87,44 +155,86 @@
             <option value="si">Sí</option>
             <option value="no">No</option>
           </select>
+          <div class="invalid-feedback" *ngIf="form.get('comiteParitario')?.touched && form.get('comiteParitario')?.errors?.['required']">
+            Debe seleccionar una opción
+          </div>
         </div>
-      </div>
 
-      <div class="form-row">
         <div class="form-group">
           <label for="monitorSeguridad">MONITOR O TÉCNICO DE SEGURIDAD E HIGIENE</label>
-          <textarea id="monitorSeguridad" class="form-control" type="text" placeholder="Monitor o Técnico de Seguridad e Higiene" formControlName="monitorSeguridad" [disabled]="true" readonly></textarea>
+          <textarea 
+            id="monitorSeguridad" 
+            class="form-control" 
+            type="text" 
+            placeholder="Monitor o Técnico de Seguridad e Higiene" 
+            formControlName="monitorSeguridad" 
+            [disabled]="true" 
+            readonly
+          ></textarea>
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
           <label>NÚMERO DE TRABAJADORES</label>
-          <input type="text" class="form-control" formControlName="numeroTrabajadores" [readonly]="true" placeholder="Número de trabajadores">
+          <input 
+            type="text" 
+            class="form-control" 
+            formControlName="numeroTrabajadores" 
+            [readonly]="true" 
+            placeholder="Número de trabajadores"
+          >
         </div>
 
         <div class="form-group">
           <label>NIVEL DE RIESGO</label>
-          <input type="text" class="form-control" formControlName="nivelDeRiesgo" [readonly]="true" placeholder="Nivel de riesgo">
+          <input 
+            type="text" 
+            class="form-control" 
+            formControlName="nivelDeRiesgo" 
+            [readonly]="true" 
+            placeholder="Nivel de riesgo"
+          >
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
           <label>HORAS MÍNIMAS DE GESTIÓN EN SEGURIDAD</label>
-          <input type="text" class="form-control" formControlName="horasMinimasGestion" [readonly]="true" placeholder="Horas mínimas de gestión">
+          <input 
+            type="text" 
+            class="form-control" 
+            formControlName="horasMinimasGestion" 
+            [readonly]="true" 
+            placeholder="Horas mínimas de gestión"
+          >
         </div>
 
         <div class="form-group">
           <label>PERSONAL DE SALUD EN EL TRABAJO</label>
-          <textarea class="form-control" formControlName="personalSaludDetalles" [readonly]="true" rows="3" placeholder="Detalles del personal de salud"></textarea>
+          <textarea 
+            class="form-control" 
+            formControlName="personalSaludDetalles" 
+            [readonly]="true" 
+            rows="3" 
+            placeholder="Detalles del personal de salud"
+          ></textarea>
         </div>
       </div>
     </div>
 
     <div class="button-group mt-4">
-      <button type="button" class="btn btn-secondary me-2" (click)="regresar()">REGRESAR</button>
-      <button type="button" class="btn btn-primary" (click)="continuar()">CONTINUAR</button>
+      <button 
+        type="button" 
+        class="btn btn-secondary me-2" 
+        (click)="regresar()"
+      >REGRESAR</button>
+      <button 
+        type="button" 
+        class="btn btn-primary" 
+        (click)="continuar()"
+        [disabled]="!form.valid || !actividadSeleccionada"
+      >CONTINUAR</button>
     </div>
   </form>
 </div>
