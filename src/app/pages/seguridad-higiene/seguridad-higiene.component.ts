@@ -18,7 +18,8 @@ export class SeguridadHigieneComponent {
       .subscribe(() => {
         this.isFormRoute =
           this.router.url.includes('form-info-s-h') ||
-          this.router.url.includes('form-indicadores-s-h');
+          this.router.url.includes('form-indicadores-s-h')||
+          this.router.url.includes('form-pdf');;
       });
   }
 

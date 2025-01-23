@@ -1,0 +1,19 @@
+<div class="container">
+    <h2>Vista Previa del Informe</h2>
+
+    <div class="button-group">
+        <button type="button" class="btn btn-secondary" (click)="regresar()">
+            <i class="fas fa-arrow-left"></i> Regresar
+        </button>
+        <button type="button" class="btn btn-primary" (click)="generarPDF()">
+            <i class="fas fa-download"></i> Guardar PDF
+        </button>
+        <button type="button" class="btn btn-success" (click)="continuar()">
+            <i class="fas fa-arrow-right"></i> Continuar
+        </button>
+    </div>
+
+    <div class="pdf-preview">
+        <canvas #pdfPreview></canvas>
+    </div>
+</div>

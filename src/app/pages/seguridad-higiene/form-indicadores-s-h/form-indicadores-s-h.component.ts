@@ -40,27 +40,27 @@ export class FormIndicadoresSHComponent {
       capacitacionesSeguridad: this.fb.group({
         numerador: [, [Validators.min(0)]],
         denominador: [, [Validators.min(1)]],
-        resultado: [0]
+        resultado: ['ND']
       }),
       inspeccionesSeguridad: this.fb.group({
         numerador: [, [Validators.min(0)]],
         denominador: [, [Validators.min(1)]],
-        resultado: [0]
+        resultado: ['ND']
       }),
       observacionesCSeguros: this.fb.group({
         numerador: [, [Validators.min(0)]],
         denominador: [, [Validators.min(1)]],
-        resultado: [0]
+        resultado: ['ND']
       }),
       correcionConInseguras: this.fb.group({
         numerador: [, [Validators.min(0)]],
         denominador: [, [Validators.min(1)]],
-        resultado: [0]
+        resultado: ['ND']
       }),
       cumplimientoUsoEPP: this.fb.group({
         numerador: [, [Validators.min(0)]],
         denominador: [, [Validators.min(1)]],
-        resultado: [0]
+        resultado: ['ND']
       })
     });
 
@@ -105,8 +105,8 @@ export class FormIndicadoresSHComponent {
     if (this.form.valid) {
       this._formSvc.setForm2(this.form.value);
       try {
-        await this._formSvc.newForm();
-        this.router.navigate(['/seguridad-higiene']);
+        //await this._formSvc.newForm();
+        this.router.navigate(['/seguridad-higiene/form-pdf']);
       } catch (error) {
         console.error('Error al guardar el formulario:', error);
       }
