@@ -1,7 +1,7 @@
-import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterModule, RouterLink } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { RiesgosService } from '../../../core/services/form.service';
 import jsPDF from 'jspdf';
 import * as pdfjsLib from 'pdfjs-dist';
@@ -13,9 +13,9 @@ import * as pdfjsLib from 'pdfjs-dist';
   templateUrl: './form-pdf.component.html',
   styleUrl: './form-pdf.component.css'
 })
-export class FormPdfComponent implements OnInit {
+export class FormPdfComponent implements AfterViewInit {
   form: any;
-  pdfSrc: string | ArrayBuffer | null = null;
+  pdfSrc: ArrayBuffer | null = null;
   @ViewChild('pdfPreview') pdfPreview!: ElementRef;
 
   constructor(
@@ -26,8 +26,13 @@ export class FormPdfComponent implements OnInit {
     this.form = this._formSvc.form;
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.generarPDF(false);
+    if (this.pdfSrc) {
+      this.previewPDF();
+    } else {
+      console.error('PDF Source is null or undefined');
+    }
   }
 
   generarPDF(download: boolean = true) {
@@ -112,7 +117,8 @@ export class FormPdfComponent implements OnInit {
     addFormField('Nombre de la empresa', formData.nombreEmpresa);
     addFormField('Actividad económica', formData.actividadEconomica);
     addFormField('Tipo de empresa', formData.empresaTipo);
-    addFormField('Provincia, Ciudad', formData.provincia);
+    addFormField('Provincia', formData.provincia);
+    addFormField('Ciudad', formData.ciudad);
     addFormField('Correo electrónico', formData.correoElectronico);
     addFormField('Cantidad de trabajadores', 
       `Hombres: ${formData.cantidadHombres || 0} - Mujeres: ${formData.cantidadMujeres || 0}`);
@@ -167,29 +173,36 @@ export class FormPdfComponent implements OnInit {
   }
 
   previewPDF() {
-    if (this.pdfSrc && this.pdfPreview) {
-      const loadingTask = pdfjsLib.getDocument({ data: this.pdfSrc });
-      loadingTask.promise.then(pdf => {
+    if (this.pdfSrc && this.pdfPreview && this.pdfPreview.nativeElement) {
+      // Crear una copia del ArrayBuffer para evitar el error DataCloneError
+      const pdfSrcCopy = this.pdfSrc.slice(0);
+      
+      pdfjsLib.getDocument({ data: pdfSrcCopy }).promise.then(pdf => {
         pdf.getPage(1).then(page => {
           const canvas: HTMLCanvasElement = this.pdfPreview.nativeElement;
           const context = canvas.getContext('2d');
           
           const desiredWidth = 800;
-          const viewport = page.getViewport({ scale: 1.0 });
+          const viewport = page.getViewport({ scale: 1 });
           const scale = desiredWidth / viewport.width;
           const scaledViewport = page.getViewport({ scale });
 
           canvas.height = scaledViewport.height;
           canvas.width = scaledViewport.width;
 
-          const renderContext = {
-            canvasContext: context!,
-            viewport: scaledViewport
-          };
-
-          page.render(renderContext);
+          page.render({ canvasContext: context!, viewport: scaledViewport }).promise.then(() => {
+            console.log('PDF rendered');
+          }).catch(error => {
+            console.error('Error rendering PDF:', error);
+          });
+        }).catch(error => {
+          console.error('Error getting page:', error);
         });
+      }).catch(error => {
+        console.error('Error loading PDF:', error);
       });
+    } else {
+      console.error('PDF source or preview element not available');
     }
   }
 
