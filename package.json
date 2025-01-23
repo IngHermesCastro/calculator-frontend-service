@@ -24,6 +24,7 @@
     "@ng-bootstrap/ng-bootstrap": "^17.0.0",
     "@popperjs/core": "^2.11.8",
     "@types/pdfjs-dist": "^2.10.377",
+    "firebase-admin": "^13.0.2",
     "jspdf": "^2.5.2",
     "jspdf-autotable": "^3.8.4",
     "pdfjs-dist": "^4.10.38",
