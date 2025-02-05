@@ -23,9 +23,6 @@ export class TabsComponent {
 
   private actualizarTab(url: string): void {
     switch (url) {
-      case '/login':
-        this.seleccionado = [false, true, false];
-        break;
       case '/seguridad-higiene':
       case '/seguridad-higiene/form-info-s-h':
       case '/seguridad-higiene/form-indicadores-s-h':

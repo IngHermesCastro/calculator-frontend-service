@@ -3,20 +3,23 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 50px;
+    padding: 30px 20px; /* Reducido el padding para menos espacio */
     background: rgb(0, 65, 112);
     color: #fff;
+    flex-direction: column;
 }
 
 .hero-content {
     flex: 1;
-    max-width: 50%;
+    max-width: 100%;
+    text-align: center;
+    margin-bottom: 10px; /* Reducido el margen inferior */
 }
 
 .hero-content h1 {
-    font-size: 3rem;
+    font-size: 2rem;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 15px; /* Reducido el margen inferior */
 }
 
 .hero-content h1 span {
@@ -24,35 +27,35 @@
 }
 
 .hero-content p {
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 
 .hero-image {
     flex: 1;
-    text-align: right;
+    text-align: center;
 }
 
 .hero-image img {
-    max-width: 90%;
+    max-width: 100%;
     height: auto;
 }
 
 /* Services Section */
 .services {
-    padding: 4rem 5%;
+    padding: 2rem 5%; /* Reducido el padding para menos espacio */
+    text-align: center;
 }
 
 .services h2 {
-    text-align: center;
     font-size: 2rem;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem; /* Reducido el margen inferior */
     color: var(--primary-color);
 }
 
 .service-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 .card {
@@ -61,6 +64,8 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     text-align: center;
+    width: 300px;
+    margin: 0 auto 10px; /* Reducido el margen inferior */
     transition: transform 0.3s ease;
 }
 
@@ -70,7 +75,7 @@
 
 .card img {
     width: 100%;
-    height: 180px;
+    height: auto;
     object-fit: cover;
 }
 
@@ -100,19 +105,22 @@
 .technology {
     display: flex;
     align-items: center;
-    padding: 50px;
+    padding: 30px 20px; /* Reducido el padding para menos espacio */
     background: #fff5e1;
     color: #333;
+    flex-direction: column;
 }
 
 .technology .tech-content {
     flex: 1;
-    max-width: 50%;
+    max-width: 100%;
+    text-align: center;
+    margin-bottom: 10px; /* Reducido el margen inferior */
 }
 
 .technology h2 {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
+    font-size: 2rem;
+    margin-bottom: 15px; /* Reducido el margen inferior */
     color: #444;
 }
 
@@ -123,12 +131,12 @@
 .technology ul {
     list-style: none;
     padding: 0;
-    margin-top: 20px;
+    margin-top: 10px; /* Reducido el margen superior */
 }
 
 .technology ul li {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
+    font-size: 1rem;
+    margin-bottom: 5px; /* Reducido el margen inferior */
 }
 
 .technology .tech-image {
@@ -137,6 +145,27 @@
 }
 
 .technology .tech-image img {
-    max-width: 90%;
+    max-width: 100%;
     height: auto;
+}
+
+/* Media Queries para mejorar la responsividad */
+@media (min-width: 768px) {
+    .hero, .technology {
+        flex-direction: row;
+    }
+
+    .hero-content, .technology .tech-content {
+        max-width: 50%;
+        text-align: left;
+        margin-right: 10px; /* Reducido el margen derecho */
+    }
+
+    .hero-image, .technology .tech-image {
+        max-width: 50%;
+    }
+
+    .services {
+        margin-bottom: 30px; /* Reducido el margen inferior */
+    }
 }
