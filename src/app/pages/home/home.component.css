@@ -105,7 +105,7 @@
 .technology {
     display: flex;
     align-items: center;
-    padding: 30px 20px; /* Reducido el padding para menos espacio */
+    padding: 30px 20px;
     background: #fff5e1;
     color: #333;
     flex-direction: column;
@@ -114,14 +114,18 @@
 .technology .tech-content {
     flex: 1;
     max-width: 100%;
-    text-align: center;
-    margin-bottom: 10px; /* Reducido el margen inferior */
+    text-align: center; /* Mantenemos el centro para el contenedor */
+    margin-bottom: 10px;
 }
 
 .technology h2 {
-    font-size: 2rem;
-    margin-bottom: 15px; /* Reducido el margen inferior */
+    font-size: 2.5rem;
+    margin-bottom: 15px;
     color: #444;
+    text-align: left; /* Cambiamos a left para alinear el título a la izquierda */
+    max-width: 300px; /* Añadimos un ancho máximo para que coincida con la lista */
+    margin-left: auto; /* Centramos el contenedor del título */
+    margin-right: auto; /* Centramos el contenedor del título */
 }
 
 .technology h2 span {
@@ -131,12 +135,16 @@
 .technology ul {
     list-style: none;
     padding: 0;
-    margin-top: 10px; /* Reducido el margen superior */
+    margin-top: 10px;
+    text-align: left; /* Alinea el texto de la lista a la izquierda */
+    max-width: 300px; /* Limita el ancho de la lista para mejor visualización */
+    margin-left: auto; /* Centra la lista */
+    margin-right: auto; /* Centra la lista */
 }
 
 .technology ul li {
-    font-size: 1rem;
-    margin-bottom: 5px; /* Reducido el margen inferior */
+    font-size: 1.2rem;
+    margin-bottom: 5px;
 }
 
 .technology .tech-image {
@@ -151,21 +159,17 @@
 
 /* Media Queries para mejorar la responsividad */
 @media (min-width: 768px) {
-    .hero, .technology {
+    .technology {
         flex-direction: row;
     }
 
-    .hero-content, .technology .tech-content {
+    .technology .tech-content {
         max-width: 50%;
-        text-align: left;
-        margin-right: 10px; /* Reducido el margen derecho */
+        text-align: left; /* Alinea el texto a la izquierda en pantallas más grandes */
+        margin-right: 10px;
     }
 
-    .hero-image, .technology .tech-image {
+    .technology .tech-image {
         max-width: 50%;
-    }
-
-    .services {
-        margin-bottom: 30px; /* Reducido el margen inferior */
     }
 }
