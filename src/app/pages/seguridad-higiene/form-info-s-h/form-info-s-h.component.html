@@ -110,7 +110,7 @@
           <label for="provincia">PROVINCIA</label>
           <select id="provincia" class="form-select" formControlName="provincia">
             <option value="">Seleccionar Provincia</option>
-            <option *ngFor="let provincia of provincias" [value]="provincia.id">
+            <option *ngFor="let provincia of provincias" [value]="provincia.name">
               {{provincia.name}}
             </option>
           </select>
@@ -125,7 +125,7 @@
           <label for="ciudad">CIUDAD</label>
           <select id="ciudad" class="form-select" formControlName="ciudad">
             <option value="">Seleccionar Ciudad</option>
-            <option *ngFor="let ciudad of ciudades" [value]="ciudad.id">
+            <option *ngFor="let ciudad of ciudades" [value]="ciudad.name">
               {{ciudad.name}}
             </option>
           </select>

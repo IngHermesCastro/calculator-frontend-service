@@ -1,4 +1,3 @@
-// src/app/components/form-info-s-h/form-info-s-h.component.ts
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -46,7 +45,7 @@ export class FormInfoSHComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Load activities
+    // Cargar actividades
     this._formSvc.obtenerTodasLasActividades().subscribe({
       next: (actividades) => {
         this.todasLasActividades = actividades;
@@ -57,7 +56,7 @@ export class FormInfoSHComponent implements OnInit {
       }
     });
 
-    // Load provinces
+    // Cargar provincias
     this._formSvc.obtenerTodasLasProvincias().subscribe({
       next: (provincias) => {
         this.provincias = provincias;
@@ -68,13 +67,13 @@ export class FormInfoSHComponent implements OnInit {
       }
     });
 
-    // Watch for province changes
-    this.form.get('provincia')?.valueChanges.subscribe((provinciaId) => {
-      if (provinciaId) {
-        const provincia = this.provincias.find(p => p.id === provinciaId);
+    // Observar cambios en la provincia seleccionada
+    this.form.get('provincia')?.valueChanges.subscribe((provinciaName) => {
+      if (provinciaName) {
+        const provincia = this.provincias.find(p => p.name === provinciaName);
         if (provincia) {
           this.ciudades = provincia.cities;
-          this.form.patchValue({ ciudad: '' }); // Reset city selection
+          this.form.patchValue({ ciudad: '' }); // Resetear la ciudad seleccionada
         }
       } else {
         this.ciudades = [];
@@ -82,7 +81,7 @@ export class FormInfoSHComponent implements OnInit {
       }
     });
 
-    // Watch for worker count changes
+    // Observar cambios en la cantidad de trabajadores
     this.form.get('cantidadHombres')?.valueChanges.subscribe(() => {
       this.actualizarCamposCalculados();
     });
