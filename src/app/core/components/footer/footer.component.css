@@ -1,0 +1,20 @@
+footer {
+    background-color: #003366;
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    margin-top: auto; /* Asegura que el footer esté al final de la página */
+
+}
+
+.footer-links ul, .social-links {
+    display: flex;
+    gap: 15px;
+}
+
+.footer-links a, .social-links a {
+    color: white;
+    text-decoration: none;
+}

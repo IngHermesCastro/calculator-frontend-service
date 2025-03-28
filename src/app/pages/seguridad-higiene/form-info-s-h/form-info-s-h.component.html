@@ -1,0 +1,298 @@
+<div class="bg-[#003366] text-white py-4 mb-4">
+  <div class="container mx-auto text-center">
+    <h2 class="text-3xl font-bold tracking-wide mb-2">SEGURIDAD E HIGIENE</h2>
+    <!-- <h3 class="text-xl opacity-80">FORMULARIO</h3> -->
+  </div>
+  <form [formGroup]="form">
+    <div class="form-section">
+      <!-- <h4>INFORMACIÓN EMPRESA</h4> -->
+      <!-- ADICION PARA SECCION #1 -->
+      <div class="col-md-7">
+        <div class="card shadow-sm mb-4">
+          <div class="card-header bg-primary text-white">
+            <h3 class="card-title text-center mb-0">
+              <i class="bi bi-pencil-square me-2"></i>INFORMACION DE LA EMPRESA
+            </h3>
+          </div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="nombreEmpresa" [class.float-label]="shouldFloatLabel('nombreEmpresa')"><i
+                    class="bi bi-buildings"></i> NOMBRE EMPRESA</label>
+                <input id="nombreEmpresa" type="text" class="form-control" formControlName="nombreEmpresa"
+                  placeholder="Ingresar" (focus)="onFocus('nombreEmpresa')" (blur)="onBlur('nombreEmpresa')">
+                <div class="invalid-feedback"
+                  *ngIf="form.get('nombreEmpresa')?.touched && form.get('nombreEmpresa')?.errors?.['required']">
+                  El nombre de la empresa es requerido
+                </div>
+              </div>
+              <!-- Apartado del Correo -->
+
+              <div class="form-group">
+                <label for="correoElectronico" [class.float-label]="shouldFloatLabel('correoElectronico')"><i
+                    class="bi bi-envelope-at"></i> CORREO
+                  ELECTRÓNICO</label>
+                <input id="correoElectronico" type="email" class="form-control" formControlName="correoElectronico"
+                  placeholder="Ingresar" (focus)="onFocus('correoElectronico')" (blur)="onBlur('correoElectronico')">
+                <div class="invalid-feedback"
+                  *ngIf="form.get('correoElectronico')?.touched && form.get('correoElectronico')?.errors?.['required']">
+                  El correo electrónico es requerido
+                </div>
+                <div class="invalid-feedback"
+                  *ngIf="form.get('correoElectronico')?.touched && form.get('correoElectronico')?.errors?.['email']">
+                  Ingrese un correo electrónico válido
+                </div>
+              </div>
+            </div>
+
+            <!-- APARTADO DE ACTIVIDAD ECONOMICA -->
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="actividadEconomica" [class.float-label]="shouldFloatLabel('actividadEconomica')"><i
+                    class="bi bi-activity"></i> ACTIVIDAD
+                  ECONÓMICA</label>
+                <input id="actividadEconomica" type="text" class="form-control" formControlName="actividadEconomica"
+                  [ngbTypeahead]="buscarActividad" [inputFormatter]="formatearActividad"
+                  [resultFormatter]="formatearActividad" (selectItem)="seleccionarActividad($event)"
+                  [class.is-invalid]="form.get('actividadEconomica')?.touched && !actividadSeleccionada"
+                  placeholder="Buscar actividad económica" (focus)="onFocus('actividadEconomica')"
+                  (blur)="onBlur('actividadEconomica')">
+                <div class="invalid-feedback" *ngIf="form.get('actividadEconomica')?.touched && !actividadSeleccionada">
+                  Debe seleccionar una actividad económica válida
+                </div>
+              </div>
+
+              <!-- APARTADO DE CANTIDAD DE HOMBRES Y MUJERES -->
+
+              <div class="form-group">
+                <!-- <label>CANTIDAD TRABAJADORES HOMBRES/MUJERES</label>-->
+                <div class="input-group">
+                  <div class="sub-group">
+                    <label class="cantidad" for="cantidadHombres"
+                      [class.float-label]="shouldFloatLabel('cantidadHombres')"><i class="bi bi-person-standing"></i>
+                      HOMBRES</label>
+                    <input type="number" id="cantidadHombres" class="form-control" formControlName="cantidadHombres"
+                      placeholder="Hombres" value="0" min="0" (focus)="onFocus('cantidadHombres')"
+                      (blur)="onBlur('cantidadHombres')">
+                    <div class="invalid-feedback"
+                      *ngIf="form.get('cantidadHombres')?.touched && form.get('cantidadHombres')?.errors?.['min']">
+                      La cantidad debe ser mayor o igual a 0
+                    </div>
+                  </div>
+                  <div class="sub-group">
+                    <label class="cantidad" for="cantidadMujeres"
+                      [class.float-label]="shouldFloatLabel('cantidadMujeres')"><i
+                        class="bi bi-person-standing-dress"></i> MUJERES</label>
+                    <input type="number" id="cantidadMujeres" class="form-control" formControlName="cantidadMujeres"
+                      placeholder="Mujeres" value="0" min="0" (focus)="onFocus('cantidadMujeres')"
+                      (blur)="onBlur('cantidadMujeres')">
+                    <div class="invalid-feedback"
+                      *ngIf="form.get('cantidadMujeres')?.touched && form.get('cantidadMujeres')?.errors?.['min']">
+                      La cantidad debe ser mayor o igual a 0
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- APARTADO DE EMPRESA PUBLICA O PRIVADA -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="empresaTipo" [class.float-label]="shouldFloatLabel('empresaTipo')"><i
+                    class="bi bi-building-gear"></i> EMPRESA PÚBLICA/PRIVADA</label>
+                <select id="empresaTipo" class="form-select" formControlName="empresaTipo"
+                  (focus)="onFocus('empresaTipo')" (blur)="onBlur('empresaTipo')">
+                  <option value=""></option>
+                  <option value="publica">Pública</option>
+                  <option value="privada">Privada</option>
+                </select>
+                <div class="invalid-feedback"
+                  *ngIf="form.get('empresaTipo')?.touched && form.get('empresaTipo')?.errors?.['required']">
+                  Debe seleccionar el tipo de empresa
+                </div>
+              </div>
+
+              <!-- APARTADO DE PROVINCIA -->
+
+              <div class="form-group">
+                <label for="provincia" [class.float-label]="shouldFloatLabel('provincia')"><i class="bi bi-pin-map"></i>
+                  PROVINCIA</label>
+                <select id="provincia" class="form-select" formControlName="provincia" (focus)="onFocus('provincia')"
+                  (blur)="onBlur('provincia')">
+                  <option value=""></option>
+                  <option *ngFor="let provincia of provincias" [value]="provincia.name">
+                    {{provincia.name}}
+                  </option>
+                </select>
+                <div class="invalid-feedback"
+                  *ngIf="form.get('provincia')?.touched && form.get('provincia')?.errors?.['required']">
+                  Debe seleccionar una provincia
+                </div>
+              </div>
+            </div>
+
+            <!-- APARTADO DE CIUDAD -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="ciudad" [class.float-label]="shouldFloatLabel('ciudad')"><i class="bi bi-pin-map"></i>
+                  CIUDAD</label>
+                <select (focus)="onFocus('ciudad')" (blur)="onBlur('ciudad')" id="ciudad" class="form-select"
+                  formControlName="ciudad">
+                  <option value=""></option>
+                  <option *ngFor="let ciudad of ciudades" [value]="ciudad.name">
+                    {{ciudad.name}}
+                  </option>
+                </select>
+                <div class="invalid-feedback"
+                  *ngIf="form.get('ciudad')?.touched && form.get('ciudad')?.errors?.['required']">
+                  Debe seleccionar una ciudad
+                </div>
+              </div>
+
+              <!-- APARTADO DE COMITE PARITARIO -->
+              <div class="form-group">
+                <label for="comiteParitario" [class.float-label]="shouldFloatLabel('comiteParitario')"><i
+                    class="bi bi-people-fill"></i> COMITÉ
+                  PARITARIO</label>
+                <select id="comiteParitario" class="form-select" formControlName="comiteParitario"
+                  (focus)="onFocus('comiteParitario')" (blur)="onBlur('comiteParitario')">
+                  <option value=""></option>
+                  <option value="si">Sí</option>
+                  <option value="no">No</option>
+
+                </select>
+                <div class="invalid-feedback"
+                  *ngIf="form.get('comiteParitario')?.touched && form.get('comiteParitario')?.errors?.['required']">
+                  Debe seleccionar una opción
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+
+        <!-- ADICION PARA SECCION #2 -->
+        <div class="col-md-15">
+          <div class="card shadow-sm">
+            <div class="card-header bg-warning text-dark">
+              <h3 class="card-title text-center mb-0">
+                <i class="bi bi-info-circle me-2"></i>RESUMEN {{nombreEmpresa}}
+              </h3>
+            </div>
+            <div class="card-body bg-light">
+              <!-- Campos No editables -->
+              <!--INFORMACION DE TIPO DE EMPRESA-->
+              <div class="form-group">
+                <label for="tipoInstitucion" [class.float-label]="shouldFloatLabel('tipoInstitucion')">TIPO DE
+                  EMPRESA/INSTITUCIÓN</label>
+                <select id="tipoInstitucion" class="form-select" formControlName="tipoInstitucion" [disabled]="true"
+                  (focus)="onFocus('tipoInstitucion')" (blur)="onBlur('tipoInstitucion')">
+                  <option value=""></option>
+                  <option value="Micro">Micro</option>
+                  <option value="Pequeña">Pequeña</option>
+                  <option value="Mediana A">Mediana A</option>
+                  <option value="Mediana B">Mediana B</option>
+                  <option value="Grande">Grande</option>
+                </select>
+              </div>
+
+              <!--INFORMACION NUMEOR DE TRABAJADORES-->
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="numeroTrabajadores" [class.float-label]="shouldFloatLabel('numeroTrabajadores')">NÚMERO DE
+                    TRABAJADORES</label>
+                  <input type="text" class="form-control" formControlName="numeroTrabajadores" [readonly]="true"
+                    placeholder="Número de trabajadores" (focus)="onFocus('numeroTrabajadores')"
+                    (blur)="onBlur('numeroTrabajadores')">
+                </div>
+
+                <div class="form-group">
+                  <label [class.float-label]="shouldFloatLabel('numeroTrabajadores')"><i
+                      class="bi-exclamation-triangle"></i> NIVEL DE RIESGO</label>
+                  <input type="text" class="form-control" formControlName="nivelDeRiesgo" [readonly]="true"
+                    placeholder="Nivel de riesgo" (focus)="onFocus('numeroTrabajadores')"
+                    (blur)="onBlur('numeroTrabajadores')">
+                </div>
+              </div>
+
+              <!--INFORMACION HORAS MINIMAS-->
+              <div class="form-row">
+                <div class="form-group">
+                  <label [class.float-label]="shouldFloatLabel('numeroTrabajadores')">HORAS MÍNIMAS DE GESTIÓN EN
+                    SEGURIDAD</label>
+                  <input type="text" class="form-control" formControlName="horasMinimasGestion" [readonly]="true"
+                    placeholder="Horas mínimas de gestión" (focus)="onFocus('numeroTrabajadores')"
+                    (blur)="onBlur('numeroTrabajadores')">
+                </div>
+
+                <div class="form-group">
+                  <label [class.float-label]="shouldFloatLabel('numeroTrabajadores')">PERSONAL DE SALUD EN EL
+                    TRABAJO</label>
+                  <textarea class="form-control" formControlName="personalSaludDetalles" [readonly]="true" rows="3"
+                    placeholder="Detalles del personal de salud" (focus)="onFocus('numeroTrabajadores')"
+                    (blur)="onBlur('numeroTrabajadores')"></textarea>
+                </div>
+              </div>
+
+              <!-- INFORMACION SOBRE MONITOR TECNICO-->
+              <div class="form-row">
+
+
+                <div class="form-group">
+                  <label for="monitorSeguridad" [class.float-label]="shouldFloatLabel('monitorSeguridad')">MONITOR O
+                    TÉCNICO DE
+                    SEGURIDAD E HIGIENE</label>
+                  <textarea id="monitorSeguridad" class="form-control" type="text"
+                    placeholder="Monitor o Técnico de Seguridad e Higiene" formControlName="monitorSeguridad"
+                    [disabled]="true" readonly (focus)="onFocus('monitorSeguridad')"
+                    (blur)="onBlur('monitorSeguridad')"></textarea>
+                </div>
+              </div>
+
+
+
+
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-12 d-flex justify-content-between">
+        <button class="btn btn-outline-primary" (click)="regresar()">
+          <i class="bi bi-arrow-left me-2"></i>Regresar
+        </button>
+        <button class="btn btn-primary" (click)="continuar()" [disabled]="!form.valid || !actividadSeleccionada">
+          Continuar<i class="bi bi-arrow-right ms-2"></i>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
