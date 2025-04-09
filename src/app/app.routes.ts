@@ -27,5 +27,13 @@ export const routes: Routes = [
                 component: FormPdfComponent
             }
         ]
+    },
+    {
+      path: "login",
+      loadComponent: () => import('./pages/auth/login/login.component').then(c => c.LoginComponent)
+    },
+    {
+      path: "**",
+      redirectTo: ""
     }
 ];

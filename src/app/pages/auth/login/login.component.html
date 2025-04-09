@@ -1,0 +1,48 @@
+<div class="login-container">
+  <div class="container" id="container" [class.active]="isActive">
+    <div class="form-container sign-up">
+      <form>
+        <h1>Crear Cuenta</h1>
+        <div class="social-icons">
+          <a href="#" class="icon"><i class="bi bi-google"></i></a>
+          <a href="#" class="icon"><i class="bi bi-github"></i></a>
+        </div>
+        <span>O, si lo prefiere, utilice su correo electrónico para el registro</span>
+        <input type="text" placeholder="Nombre" />
+        <input type="email" placeholder="Correo" />
+        <input type="password" placeholder="Contraseña" />
+        <button>Iniciar Sesión</button>
+      </form>
+    </div>
+    <div class="form-container sign-in">
+      <form>
+        <h1>Ingresar</h1>
+        <div class="social-icons">
+          <a href="#" class="icon"><i class="bi bi-google"></i></a>
+          <a href="#" class="icon"><i class="bi bi-github"></i></a>
+        </div>
+        <span>Iniciar sesión con correo electrónico</span>
+        <input type="email" placeholder="Correo" />
+        <input type="password" placeholder="Contraseña" />
+        <a href="#">¿Ha olvidado su contraseña?</a>
+        <button>Iniciar Sesión</button>
+      </form>
+    </div>
+    <div class="toggle-container">
+      <div class="toggle">
+        <div class="toggle-panel toggle-left">
+          <h1>Bienvenido!</h1>
+          <p>Si ya tienes una cuenta, inicia sesión aquí.</p>
+          <button class="hidden" id="login" (click)="toggleActive()">Iniciar Sesión</button>
+        </div>
+        <div class="toggle-panel toggle-right">
+          <h1>Hola, Amigo!</h1>
+          <p>
+            También puede registrarse utilizando su dirección de correo electrónico.
+          </p>
+          <button class="hidden" id="register" (click)="toggleActive()">Registrarse</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

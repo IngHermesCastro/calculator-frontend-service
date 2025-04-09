@@ -2,6 +2,7 @@
   display: block;
   width: 100%;
   min-height: 100vh;
+  /* background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%); */
   background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
 }
 
@@ -16,7 +17,8 @@
 
 .info-section {
   flex: 1;
-  background: linear-gradient(145deg, #003B5C 0%, #005580 100%);
+  /* background: linear-gradient(145deg, #003B5C 0%, #005580 100%); */
+  background: linear-gradient(145deg, #7d7d7d 0%, #005580 100%);
   padding: 3.5rem;
   border-radius: 16px;
   color: #FFFFFF;
@@ -83,7 +85,7 @@
 
 .btn-primary {
   background: linear-gradient(145deg, #FFFFFF, #f0f0f0);
-  color: #003B5C;
+  color: #d3a5a5;
   padding: 1.2rem 3.5rem;
   border: none;
   border-radius: 50px;
@@ -123,6 +125,7 @@
 @media (max-width: 1024px) {
   .container {
     padding: 2rem 1.5rem;
+    max-width: 100%;
   }
 
   .info-section {

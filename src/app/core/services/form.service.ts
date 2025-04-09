@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { addDoc, collection, collectionData, Firestore, query, where, DocumentData } from '@angular/fire/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Form } from '../interfaces/form';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { Riesgo } from '../interfaces/riesgos';
 import { Provincia } from '../interfaces/provincias';
@@ -72,7 +72,7 @@ export class RiesgosService {
   buscarActividades(searchTerm: string): Observable<Riesgo[]> {
     const q = query(this._riesgosCollection, where('descripcion', '>=', searchTerm), where('descripcion', '<=', searchTerm + '\uf8ff'));
     return collectionData(q, { idField: 'id' }).pipe(
-      map((riesgos: DocumentData[]) => riesgos.filter((actividad: DocumentData) => 
+      map((riesgos: DocumentData[]) => riesgos.filter((actividad: DocumentData) =>
         (actividad['descripcion'] || '').toLowerCase().includes(searchTerm.toLowerCase())
       ) as Riesgo[])
     );
@@ -99,7 +99,7 @@ export class RiesgosService {
   setForm1(formValue: Partial<Form>) {
     this.form.patchValue(formValue);
   }
-  
+
   setForm2(pForm: Partial<Form>) {
     this.form.patchValue(pForm);
   }
@@ -125,7 +125,7 @@ export class RiesgosService {
 
   obtenerNivelDeRiesgo(tipoInstitucion: string, actividadEconomica: any): string {
     const actividadEconomicaStr = String(actividadEconomica || '');
-    
+
     if (actividadEconomicaStr.toLowerCase().includes('alto')) {
       return 'Alto';
     } else if (actividadEconomicaStr.toLowerCase().includes('medio')) {
@@ -166,12 +166,12 @@ export class RiesgosService {
     if (!tipoInstitucion) return '';
 
     let detalles = '';
-    
+
     if (tipoInstitucion === 'Micro' || tipoInstitucion === 'Pequeña') {
       detalles = 'Un profesional médico con formación en 4to nivel en seguridad y salud en el trabajo de visita periódica.';
     } else if (tipoInstitucion === 'Mediana A' || tipoInstitucion === 'Mediana B' || tipoInstitucion === 'Grande') {
       detalles = 'Un profesional médico con formación en 4to nivel en seguridad y salud en el trabajo.';
-      
+
       if (tipoInstitucion === 'Grande') {
         detalles += ' Un profesional de enfermería.';
         if (numeroTrabajadores >= 300) {
@@ -197,8 +197,8 @@ export class RiesgosService {
 
     switch (tipoInstitucion) {
       case 'Micro':
-        return nivelDeRiesgo.toLowerCase().includes('bajo') || nivelDeRiesgo.toLowerCase().includes('medio') 
-          ? '8 horas/mes' 
+        return nivelDeRiesgo.toLowerCase().includes('bajo') || nivelDeRiesgo.toLowerCase().includes('medio')
+          ? '8 horas/mes'
           : '16 horas/mes';
       case 'Pequeña':
         if (nivelDeRiesgo.toLowerCase().includes('bajo')) return '16 horas/mes';
@@ -273,4 +273,5 @@ export class RiesgosService {
       monitorSeguridad: monitorSeguridad
     }, { emitEvent: false });
   }
+
 }

@@ -1,176 +1,272 @@
-<div class="container">
-    <h2>SEGURIDAD E HIGIENE</h2>
-    <h3>CÁLCULO DE INDICADORES</h3>
+<div class="d-flex justify-content-center position-relative">
+  <div class="bg-[#003366] text-white py-4 mb-4">
+    <div class="containerr mx-auto text-center">
+      <!-- <h2 class="text-3xl font-bold tracking-wide mb-2">SEGURIDAD E HIGIENE</h2> -->
+      <h3 class="text-xl">CÁLCULO DE INDICADORES</h3>
+    </div>
 
-    <form [formGroup]="form" (ngSubmit)="continuar()">
-        <div class="indicators-section">
-            <h4>INDICADORES REACTIVOS</h4>
+    <div class="container">
+      <form [formGroup]="form" (ngSubmit)="continuar()">
+        <div class="form-section">
+          <!-- SECCION, DATOS INICIALES -->
+          <div class="indicators-section">
+            <div class="card-header text-white">
+              <div class="header-container">
+                <i class="bi bi-info-square-fill fs-1 justify-self-end"></i><h4>INGRESA TUS DATOS INICIALES</h4>
+              </div>
+            </div>
 
             <div class="indicator-group" formGroupName="indiceFrecuencia">
-                <div class="indicator-label">Índice de Frecuencia (IF)</div>
-                <div class="formula-container">
-                    <div class="fraction">
-                        <div class="numerator">
-                            <input type="number" formControlName="numerador" placeholder="N. LESIONES">
+              <!-- <div class="indicator-label">Índice de Frecuencia (IF)</div> -->
+              <div class="formula-container">
+                <div class="fraction">
+                  <div class="denominator">
+                    <div class="denominator__inputs">
+                      <div class="form-group">
+                        <div class="datosEntrada">
+                          <!-- Campo para TOTAL TRABAJADORES -->
+                          <input
+                            type="number"
+                            formControlName="totalTrabajadores"
+                            placeholder="TOTAL TRABAJADORES"
+                            (input)="onInputChange('totalTrabajadores', $any($event.target).value)"
+                          >
+
+                          <!-- Campo para TOTAL HORAS TRABAJADAS -->
+                          <input
+                            type="number"
+                            formControlName="totalHorasTrabajadas"
+                            placeholder="TOTAL HORAS TRABAJADAS" (input)="onInputChange('totalHorasTrabajadas', $any($event.target).value)"
+
+                          >
                         </div>
-                        <div class="division-line"></div>
-                        <div class="denominator">
-                            <input type="number" formControlName="denominador" placeholder="TOTAL DE TRABAJADORES">
-                        </div>
+                      </div>
                     </div>
-                    <div class="multiply">×</div>
-                    <div class="constant">100</div>
-                    <div class="result">=</div>
-                    <div class="result-value">{{form.get('indiceFrecuencia')?.get('resultado')?.value || 0}}%</div>
+                  </div>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECCION, INDICADORES REACTIVOS -->
+          <div class="indicators-section">
+            <div class="card-header text-white">
+              <div class="header-container">
+                <i class="bi-exclamation-triangle-fill fs-1 justify-self-end"></i><h4>INDICADORES REACTIVOS</h4>
+              </div>
+            </div>
+
+            <div class="indicator-group" formGroupName="indiceFrecuencia">
+              <div class="indicator-label">Índice de Frecuencia (IF)</div>
+              <div class="formula-container">
+                <div class="fraction">
+                  <div class="numerator">
+                    <input type="number" formControlName="numerador" placeholder="N. LESIONES">
+                  </div>
+                  <div class="division-line"></div>
+                  <div class="denominator">
+                    <div class="denominator__inputs">
+                      <input type="number" formControlName="denominador_total" placeholder="TOTAL DE TRABAJADORES">
+                      <input type="number" formControlName="denominador_horas" placeholder="HORAS DE TRABAJO">
+                      <input type="number" formControlName="denominador_dias" placeholder="DIAS DE TRABAJO">
+                    </div>
+
+
+                  </div>
+                </div>
+                <!-- <div class="multiply">x</div> -->
+                <!-- <div class="constant">100</div> -->
+                <div class="result">=</div>
+                <div class="result-value-p">
+                  <div class="result-value">{{form.get('indiceFrecuencia')?.get('resultado')?.value || 0}}</div>
+                </div>
+              </div>
+              <div class="indicator-group__mensaje">
+                <p class="mensaje-texto">{{ mensaje['indiceFrecuencia'] }}</p>
+              </div>
             </div>
 
             <div class="indicator-group" formGroupName="indiceGravedad">
-                <div class="indicator-label">Índice de Gravedad (IG)</div>
-                <div class="formula-container">
-                    <div class="fraction">
-                        <div class="numerator">
-                            <input type="number" formControlName="numerador" placeholder="DIAS PERDIDOS">
-                        </div>
-                        <div class="division-line"></div>
-                        <div class="denominator">
-                            <input type="number" formControlName="denominador" placeholder="TOTAL HORAS TRABAJADAS DE TODOS LOS TRABAJADORES">
-                        </div>
-                    </div>
-                    <div class="multiply">×</div>
-                    <div class="constant">100</div>
-                    <div class="result">=</div>
-                    <div class="result-value">{{form.get('indiceGravedad')?.get('resultado')?.value || 0}}%</div>
+              <div class="indicator-label">Índice de Gravedad (IG)</div>
+              <div class="formula-container">
+                <div class="fraction">
+                  <div class="numerator">
+                    <input type="number" formControlName="numerador" placeholder="DIAS PERDIDOS">
+                  </div>
+                  <div class="division-line"></div>
+                  <div class="denominator">
+                    <input type="number" formControlName="denominador" placeholder="TOTAL HORAS TRABAJADAS DE TODOS LOS TRABAJADORES">
+                  </div>
                 </div>
+                <!-- <div class="multiply">×</div> -->
+                <!-- <div class="constant">100</div> -->
+                <div class="result">=</div>
+                <div class="result-value-p">
+                  <div class="result-value">{{form.get('indiceGravedad')?.get('resultado')?.value || 0}}</div>
+                </div>
+              </div>
+              <div class="indicator-group__mensaje">
+                <p class="mensaje-texto">{{ mensaje['indiceGravedad'] }}</p>
+              </div>
             </div>
 
             <div class="indicator-group" formGroupName="tasaRiesgo">
-                <div class="indicator-label">Tasa de Riesgo (TR)</div>
-                <div class="formula-container">
-                    <div class="fraction">
-                        <div class="numerator">
-                            <input type="number" formControlName="numerador" placeholder="NMERO DE DIAS PERDIDOS">
-                        </div>
-                        <div class="division-line"></div>
-                        <div class="denominator">
-                            <input type="number" formControlName="denominador" placeholder="NÚMERO DE LESIONES">
-                        </div>
-                    </div>
-                    <div class="multiply">×</div>
-                    <div class="constant">100</div>
-                    <div class="result">=</div>
-                    <div class="result-value">{{form.get('tasaRiesgo')?.get('resultado')?.value || 0}}%</div>
-                </div>
-            </div>
-        </div>
+              <div class="indicator-label">Tasa de Riesgo (TR)</div>
+              <div class="formula-container">
+                  <div class="fraction">
+                      <div class="numerator">
+                          <input type="number" formControlName="numerador" placeholder="N. DE DIAS PERDIDOS (IG)" readonly>
+                      </div>
+                      <div class="division-line"></div>
+                      <div class="denominator">
+                          <input type="number" formControlName="denominador" placeholder="N. DE LESIONES (IF)" readonly>
+                      </div>
+                  </div>
+                  <div class="result">=</div>
+                  <div class="result-value-p">
+                    <div class="result-value">{{form.get('tasaRiesgo')?.get('resultado')?.value || 0}}</div>
+                  </div>
+              </div>
+          </div>
+          </div>
 
-        <div class="indicators-section">
-            <h4>INDICADORES PROACTIVOS</h4>
+          <!-- SECCION, INDICADORES PROACTIVOS -->
+          <div class="indicators-section">
+            <div class="card-header text-white">
+              <div class="header-container">
+                <i class="bi-bandaid-fill fs-1"></i><h4>INDICADORES PROACTIVOS</h4>
+              </div>
+            </div>
 
             <div class="indicator-group" formGroupName="capacitacionesSeguridad">
-                <div class="indicator-label">Capacitaciones de Seguridad</div>
-                <div class="formula-container">
-                    <div class="fraction">
-                        <div class="numerator">
-                            <input type="number" formControlName="numerador" placeholder="N. TRABAJADORES CAPACITADOS">
-                        </div>
-                        <div class="division-line"></div>
-                        <div class="denominator">
-                            <input type="number" formControlName="denominador" placeholder="TOTAL DE TRABAJADORES">
-                        </div>
-                    </div>
-                    <div class="multiply">×</div>
-                    <div class="constant">100</div>
-                    <div class="result">=</div>
-                    <div class="result-value">{{form.get('capacitacionesSeguridad')?.get('resultado')?.value || 0}}%
-                    </div>
+              <div class="indicator-label">Capacitaciones de Seguridad</div>
+              <div class="formula-container">
+                <div class="fraction">
+                  <div class="numerator">
+                    <input type="number" formControlName="numerador" placeholder="N. TRABAJADORES CAPACITADOS">
+                  </div>
+                  <div class="division-line"></div>
+                  <div class="denominator">
+                    <input type="number" formControlName="denominador" placeholder="TOTAL DE TRABAJADORES">
+                  </div>
                 </div>
+                <div class="multiply">×</div>
+                <div class="result-value-p">
+                 <div class="constant">100</div>
+                </div>
+                <div class="result">=</div>
+                <div class="result-value-p">
+                  <div class="result-value">{{form.get('capacitacionesSeguridad')?.get('resultado')?.value || 0}}%</div>
+                </div>
+
+              </div>
             </div>
 
             <div class="indicator-group" formGroupName="inspeccionesSeguridad">
-                <div class="indicator-label">Inspecciones de Seguridad</div>
-                <div class="formula-container">
-                    <div class="fraction">
-                        <div class="numerator">
-                            <input type="number" formControlName="numerador" placeholder="N. INSPECCIONES REALIZADAS">
-                        </div>
-                        <div class="division-line"></div>
-                        <div class="denominator">
-                            <input type="number" formControlName="denominador"
-                                placeholder="META DE INSPECCIONES PLANEADAS">
-                        </div>
-                    </div>
-                    <div class="multiply">×</div>
-                    <div class="constant">100</div>
-                    <div class="result">=</div>
-                    <div class="result-value">{{form.get('inspeccionesSeguridad')?.get('resultado')?.value || 0}}%</div>
+              <div class="indicator-label">Inspecciones de Seguridad</div>
+              <div class="formula-container">
+                <div class="fraction">
+                  <div class="numerator">
+                    <input type="number" formControlName="numerador" placeholder="N. INSPECCIONES REALIZADAS">
+                  </div>
+                  <div class="division-line"></div>
+                  <div class="denominator">
+                    <input type="number" formControlName="denominador" placeholder="META DE INSPECCIONES PLANEADAS">
+                  </div>
                 </div>
+                <div class="multiply">×</div>
+                <div class="result-value-p">
+                  <div class="constant">100</div>
+                </div>
+                <div class="result">=</div>
+                <div class="result-value-p">
+                  <div class="result-value">{{form.get('inspeccionesSeguridad')?.get('resultado')?.value || 0}}%</div>
+                </div>
+              </div>
             </div>
 
             <div class="indicator-group" formGroupName="observacionesCSeguros">
-                <div class="indicator-label">Observaciones de C.Seguros</div>
-                <div class="formula-container">
-                    <div class="fraction">
-                        <div class="numerator">
-                            <input type="number" formControlName="numerador"
-                                placeholder="N. COMPORTAMIENTOS SEGUROS OBSERVADOS">
-                        </div>
-                        <div class="division-line"></div>
-                        <div class="denominator">
-                            <input type="number" formControlName="denominador"
-                                placeholder="N. TOTAL DE COMPORTAMIENTOS OBSERVADOS">
-                        </div>
-                    </div>
-                    <div class="multiply">×</div>
-                    <div class="constant">100</div>
-                    <div class="result">=</div>
-                    <div class="result-value">{{form.get('observacionesCSeguros')?.get('resultado')?.value || 0}}%</div>
+              <div class="indicator-label">Observaciones de C.Seguros</div>
+              <div class="formula-container">
+                <div class="fraction">
+                  <div class="numerator">
+                    <input type="number" formControlName="numerador" placeholder="N. COMPORTAMIENTOS SEGUROS OBSERVADOS">
+                  </div>
+                  <div class="division-line"></div>
+                  <div class="denominator">
+                    <input type="number" formControlName="denominador" placeholder="N. TOTAL DE COMPORTAMIENTOS OBSERVADOS">
+                  </div>
                 </div>
+                <div class="multiply">×</div>
+                <div class="result-value-p">
+                  <div class="constant">100</div>
+                </div>
+                <div class="result">=</div>
+                <div class="result-value-p">
+                  <div class="result-value">{{form.get('observacionesCSeguros')?.get('resultado')?.value || 0}}%</div>
+                </div>
+              </div>
             </div>
 
             <div class="indicator-group" formGroupName="correcionConInseguras">
-                <div class="indicator-label">Correción de C.Inseguras</div>
-                <div class="formula-container">
-                    <div class="fraction">
-                        <div class="numerator">
-                            <input type="number" formControlName="numerador" placeholder="N. CONDICIONES CORREGIDAS">
-                        </div>
-                        <div class="division-line"></div>
-                        <div class="denominator">
-                            <input type="number" formControlName="denominador" placeholder="TOTAL DE TRABAJADORES">
-                        </div>
-                    </div>
-                    <div class="multiply">×</div>
-                    <div class="constant">100</div>
-                    <div class="result">=</div>
-                    <div class="result-value">{{form.get('correcionConInseguras')?.get('resultado')?.value || 0}}%</div>
+              <div class="indicator-label">Correción de C.Inseguras</div>
+              <div class="formula-container">
+                <div class="fraction">
+                  <div class="numerator">
+                    <input type="number" formControlName="numerador" placeholder="N. CONDICIONES CORREGIDAS">
+                  </div>
+                  <div class="division-line"></div>
+                  <div class="denominator">
+                    <input type="number" formControlName="denominador" placeholder="CONDICIONES DETECTADAS">
+                  </div>
                 </div>
+                <div class="multiply">×</div>
+                <div class="result-value-p">
+                  <div class="constant">100</div>
+                </div>
+                <div class="result">=</div>
+                <div class="result-value-p">
+                  <div class="result-value">{{form.get('correcionConInseguras')?.get('resultado')?.value || 0}}%</div>
+                </div>
+              </div>
             </div>
 
             <div class="indicator-group" formGroupName="cumplimientoUsoEPP">
-                <div class="indicator-label">Cumplimiento del Uso de EPP</div>
-                <div class="formula-container">
-                    <div class="fraction">
-                        <div class="numerator">
-                            <input type="number" formControlName="numerador"
-                                placeholder="N. TRABAJADORES USANDO EPP CORRECTAMENTE">
-                        </div>
-                        <div class="division-line"></div>
-                        <div class="denominator">
-                            <input type="number" formControlName="denominador" placeholder="N. TRABAJADORES OBSERVADOS">
-                        </div>
-                    </div>
-                    <div class="multiply">×</div>
-                    <div class="constant">100</div>
-                    <div class="result">=</div>
-                    <div class="result-value">{{form.get('cumplimientoUsoEPP')?.get('resultado')?.value || 0}}%</div>
+              <div class="indicator-label">Cumplimiento del Uso de EPP</div>
+              <div class="formula-container">
+                <div class="fraction">
+                  <div class="numerator">
+                    <input type="number" formControlName="numerador" placeholder="N. TRABAJADORES USANDO EPP CORRECTAMENTE">
+                  </div>
+                  <div class="division-line"></div>
+                  <div class="denominator">
+                    <input type="number" formControlName="denominador" placeholder="N. TRABAJADORES OBSERVADOS">
+                  </div>
                 </div>
+                <div class="multiply">×</div>
+                <div class="result-value-p">
+                  <div class="constant">100</div>
+                </div>
+                <div class="result">=</div>
+                <div class="result-value-p">
+                  <div class="result-value">{{form.get('cumplimientoUsoEPP')?.get('resultado')?.value || 0}}%</div>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
 
-        <div class="button-group">
-            <button type="button" class="btn-secondary" (click)="regresar()">REGRESAR</button>
-            <button type="button" class="btn-secondary" [disabled]="!form.valid" (click)="continuar()">SIGUIENTE</button>
+        <div class="row mt-3">
+          <div class="col-12 d-flex justify-content-between">
+            <button type="button" class="btn btn-outline-primary" (click)="regresar()">
+              <i class="bi bi-arrow-left me-2"></i>REGRESAR
+            </button>
+            <button type="button" class="btn btn-primary" [disabled]="!form.valid" (click)="continuar()">
+              SIGUIENTE<i class="bi bi-arrow-right ms-2"></i>
+            </button>
+          </div>
         </div>
-    </form>
+      </form>
+    </div>
+  </div>
 </div>

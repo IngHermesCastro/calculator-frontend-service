@@ -24,14 +24,18 @@
     "@ng-bootstrap/ng-bootstrap": "^17.0.0",
     "@popperjs/core": "^2.11.8",
     "@types/pdfjs-dist": "^2.10.377",
+    "canvg": "^4.0.3",
+    "core-js": "^3.41.0",
     "firebase-admin": "^13.0.2",
     "jspdf": "^2.5.2",
     "jspdf-autotable": "^3.8.4",
     "pdfjs-dist": "^4.10.38",
     "rxjs": "~7.8.0",
+    "sweetalert": "^2.1.2",
+    "sweetalert2": "^11.17.2",
     "ts-node": "^10.9.2",
     "tslib": "^2.3.0",
-    "zone.js": "~0.14.10"
+    "zone.js": "^0.14.10"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.2.12",
