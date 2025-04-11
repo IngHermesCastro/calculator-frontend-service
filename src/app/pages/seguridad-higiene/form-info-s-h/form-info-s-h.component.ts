@@ -173,21 +173,21 @@ export class FormInfoSHComponent implements OnInit {
 
 
   /**PARA LA VALIDACION EN TIME REALTIME */
-  // Función para manejar el enfoque de los inputs
-  onFocus(fieldName: string) {
-    this.focusedFields[fieldName] = true;
-  }
+// Función para manejar el enfoque de los inputs
+onFocus(fieldName: string) {
+  this.focusedFields[fieldName] = true;
+}
 
-  // Función para manejar el desenfoque de los inputs
-  onBlur(fieldName: string) {
-    this.focusedFields[fieldName] = false;
-  }
+// Función para manejar el desenfoque de los inputs
+onBlur(fieldName: string) {
+  this.focusedFields[fieldName] = false;
+}
 
-  // Función para verificar si el label debe flotar
-  shouldFloatLabel(fieldName: string): boolean {
-    return !!this.form.get(fieldName)?.value || !!this.focusedFields[fieldName];
-  }
-  get nombreEmpresa() {
-    return this.form.get('nombreEmpresa')?.value?.toUpperCase() || '';
-  }
+// Función para verificar si el label debe flotar
+shouldFloatLabel(fieldName: string): boolean {
+  return !!this.form.get(fieldName)?.value || !!this.focusedFields[fieldName];
+}
+get nombreEmpresa() {
+  return this.form.get('nombreEmpresa')?.value?.toUpperCase() || '';
+}
 }

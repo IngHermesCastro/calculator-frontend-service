@@ -1,3 +1,6 @@
+/* * {
+  outline: 1px solid red;
+} */
 :root {
   --primary-color: #003F72;
   --secondary-color: #EAAB00;
@@ -11,7 +14,7 @@
 
 .container {
   /* max-width: 1200px; */
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -74,7 +77,7 @@ h4 {
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
+/**Titulos**/
 .indicator-label, .indicator-group__mensaje {
   font-weight: bold;
   color: #003366;
@@ -104,6 +107,32 @@ h4 {
   width: 100%;
   min-width: 200px;
 }
+.denominadorCampos {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto;
+  justify-items: center;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #495057;
+  background-color: #fff;
+  text-align: center;
+}
+.denominadorCampos input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #495057;
+  background-color: #fff;
+  text-align: center;
+}
+
 
 .numerator input,
 .denominator input {
@@ -122,6 +151,11 @@ h4 {
   align-items: center;
   gap: 10px;
 }
+.datosEntrada {
+  display: flex;
+  gap: 15px;
+  width: 100%;
+}
 .indicator-group__mensaje {
   padding: 10px;
   word-wrap: break-word; /* Rompe palabras largas si no caben */
@@ -138,7 +172,7 @@ h4 {
   padding: 8px 12px;
   background: #f5f5f5;
   border-radius: 4px;
-  max-width: 45rem;
+  max-width: 43rem;
 }
 
 .division-line {
@@ -147,8 +181,6 @@ h4 {
   background-color: #003366;
   margin: 0;
 }
-
-.multiply,
 .result {
   font-weight: bold;
   color: #003366;
@@ -224,7 +256,7 @@ input::-webkit-inner-spin-button {
 
 }
 
-/* Estilos para el efecto flotante */
+/**Texto flotante**/
 label {
   position: absolute;
   top: 10px;
@@ -235,58 +267,136 @@ label {
   background-color: white;
   padding: 0 5px;
   border-radius: 5px;
+  font-size: 12px;
 }
 
-.float-label {
+.float-label, .datosEntrada {
   top: -10px;
   left: 8px;
   font-size: 12px;
-  color: #333;
+  color: #003366; /* Color de texto oscuro */
+  background-color: white !important; /* Fondo blanco sólido */
+  padding: 0 5px !important;
+  z-index: 10; /* Asegura que esté por encima de otros elementos */
+  border-left: 1px solid #dee2e6;
+  border-right: 1px solid #dee2e6;
+  border-radius: 4px;
+  box-shadow: 0 0 0 2px white; /* Borde difuminado blanco para contraste */
+
+}
+.sub-group input,
+.form-control {
+  padding: 10px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #495057;
+  background-color: #fff;
 }
 
-@media (max-width: 768px) {
-  .formula-container {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .fraction {
-    width: 100%;
-  }
-
-  .multiply, .result {
-    text-align: center;
-  }
-  .container {
-    margin: 0 auto;
-    padding: 0px;
-  }
-  .form-section {
-    padding: 10px;
-    margin: 5px;
-    border-radius: 10px;
-  }
-  h4 {
-    font-size: 1.5rem;
-    /* text-align: start; */
-  }
- .header-container {
-    display: grid;
-    text-align: center;
-  }
-  .mensaje-texto {
-    font-size: 1.2rem;
-    padding: 5px 10px;
-    text-align: center;
-
-  }
-  .result-value-p {
-    justify-items: center;
-  }
 
 
 
   /**PARA EL TEXTO FLOTANTE**/
   /* Estilos para el efecto float-label en denominator__inputs */
+  .denominator__inputs {
+    display: flex;
+    gap: 15px;
+  }
+  .denominator__inputs .form-group, .datosEntrada {
+    position: relative;
+    flex: 1;
+  }
+  .denominator__inputs label {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    color: var(--medium-gray);
+    background-color: white;
+    padding: 0 5px;
+    font-size: 12px;
+  }
+
+  .denominator__inputs .float-label {
+    top: -10px;
+    left: 8px;
+    font-size: 10px;
+    color: var(--primary-color);
+    background-color: white;
+    z-index: 1;
+  }
+
+  .denominator__inputs input input, .datosEntrada {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: white;
+  }
+
+  @media (max-width: 768px) {
+    label {
+      font-size: 11px;
+    }
+    .formula-container {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .fraction {
+      width: 100%;
+    }
+
+    .multiply, .result {
+      text-align: center;
+    }
+    .container {
+      margin: 0 auto;
+      padding: 0px;
+    }
+    .form-section {
+      padding: 10px;
+      margin: 5px;
+      border-radius: 10px;
+    }
+    h4 {
+      font-size: 1.5rem;
+      /* text-align: start; */
+    }
+   .header-container {
+      display: grid;
+      text-align: center;
+    }
+    .mensaje-texto {
+      font-size: 1.2rem;
+      padding: 5px 10px;
+      text-align: center;
+
+    }
+    .result-value-p {
+      justify-items: center;
+    }
+    .datosIniciales_Principal {
+      display: flex;
+      flex-direction: column;
+      gap:15px;
+    }
+    .denominadorCampos {
+      grid-template-columns: 1fr;
+    }
+    .denominadorCampos label, .datosEntrada label {
+      font-size: 0.5rem;
+    }
+    .datosEntrada {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      width: 100%;
+    }
+    .datosEntrada .float-label {
+      font-size: 0.5rem;
+    }
 
 }

@@ -5,7 +5,8 @@ import { Router, RouterModule } from '@angular/router';
 import { RiesgosService } from '../../../core/services/form.service';
 import jsPDF from 'jspdf';
 import * as pdfjsLib from 'pdfjs-dist';
-import { variable64 } from './../../../../assets/empresa';
+import { primerEmpresa } from './../../../../assets/empresa';
+import { segundaEmpresa } from './../../../../assets/empresa2';
 
 
 @Component({
@@ -90,20 +91,20 @@ async generarPDF(download: boolean = true) {
       doc.rect(0, 0, pageWidth, 15, 'F');
 
       // Agregar el logo izquierdo
-      const logoLeftBase64 = variable64.empresa; // Base64 del logo izquierdo
+      const logoLeftBase64 = primerEmpresa.empresa; // Base64 del logo izquierdo
       const logoLeftWidth = 90; // Ancho del logo izquierdo
-      const logoLeftHeight = 45; // Alto del logo izquierdo
+      const logoLeftHeight = 47; // Alto del logo izquierdo
       const logoLeftX = margin; // Posición X del logo izquierdo
       const logoLeftY = 20; // Posición Y del logo izquierdo
-      doc.addImage(logoLeftBase64, 'PNG', logoLeftX, logoLeftY, logoLeftWidth, logoLeftHeight);
+      doc.addImage(logoLeftBase64, 'PNG', logoLeftX, logoLeftY, logoLeftWidth, logoLeftHeight, undefined, 'FAST'); // 'FAST' para compresión
 
       // Agregar el logo derecho
-      const logoRightBase64 = variable64.empresa; // Base64 del logo derecho
-      const logoRightWidth = 90; // Ancho del logo derecho
-      const logoRightHeight = 45; // Alto del logo derecho
+      const logoRightBase64 = segundaEmpresa.empresa; // Base64 del logo derecho
+      const logoRightWidth = 70; // Ancho del logo derecho
+      const logoRightHeight = 47; // Alto del logo derecho
       const logoRightX = pageWidth - margin - logoRightWidth; // Posición X del logo derecho
       const logoRightY = 20; // Posición Y del logo derecho
-      doc.addImage(logoRightBase64, 'PNG', logoRightX, logoRightY, logoRightWidth, logoRightHeight);
+      doc.addImage(logoRightBase64, 'PNG', logoRightX, logoRightY, logoRightWidth, logoRightHeight, undefined, 'FAST');
 
       // Calcular la posición del título principal entre los dos logos
       const titleY = 60; // Posición Y del título
@@ -147,7 +148,8 @@ async generarPDF(download: boolean = true) {
 
     // Función para añadir pie de página a cada página
     const addFooter = (pageNum: number) => {
-      const footerY = pageHeight - 20;
+      // const footerY = pageHeight - 20;
+      const footerY = pageHeight - 30; // Ajustar la posición Y del pie de página
 
       // Línea divisoria para el footer
       doc.setDrawColor(colorPrimario);
@@ -155,13 +157,13 @@ async generarPDF(download: boolean = true) {
       doc.line(margin, footerY - 10, pageWidth - margin, footerY - 10);
 
       // Texto del pie de página
-      addFormattedText(`Universidad Técnica Particular de Loja - Informe de Seguridad Industrial`, footerY, {
+      addFormattedText(`Universidad Técnica Particular de Loja - Informe de Seguridad Industrial, Esta herramienta está diseñada exclusivamente con`, footerY, {
         fontSize: 8,
         color: colorSubtitulo,
         align: 'left'
       });
        // Nueva línea de texto
-      addFormattedText(`Términos y Condiciones, Esta herramienta es para uso educativo. Los datos ingresados no se almacenan y se eliminan tras\ngenerar el PDF. El usuario asume responsabilidad por la interpretación y aplicación de los resultados. © 2025.`, footerY+8, { //Estaba en +2
+      addFormattedText(`fines educativos. No tiene validez legal ni debe utilizarse para propósitos distintos a los académicos. Los datos ingresados no\nse almacenan y se eliminan automáticamente después de generar el archivo PDF.El usuario es responsable del uso y\naplicación que haga de los resultados obtenidos.`, footerY+8, { //Estaba en +2
         fontSize: 8,
         color: colorSubtitulo,
         align: 'left'
@@ -243,8 +245,8 @@ async generarPDF(download: boolean = true) {
       return yPos + (totalLines * 15) + 15; // Retorna la nueva posición Y
     };
 
-    // Función para añadir indicadores con medidores gráficos
-    const addIndicadorConGrafico = async (label: string, message: string, yPos: number) => {
+    // Función para añadir indicadores con tres columnas: Indicador, Resultado, Mensaje
+    const addIndicadorConGrafico = async (label: string, resultado: string, message: string, yPos: number) => {
       if (yPos > pageHeight - 70) {
         doc.addPage();
         yPos = await addHeader();
@@ -252,24 +254,30 @@ async generarPDF(download: boolean = true) {
         addFooter(currentPage);
       }
 
-      // Etiqueta del indicador
+      // Configuración de columnas
+      const columnWidths = [205, 100, contentWidth - 300]; // Ancho de las columnas: Indicador, Resultado, Mensaje
+      const columnX = [margin, margin + columnWidths[0], margin + columnWidths[0] + columnWidths[1]];
+
+      // Texto del indicador
       doc.setFontSize(11);
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(colorPrimario);
-      doc.text(label + ':', margin, yPos);
+      doc.text(label, columnX[0], yPos, { maxWidth: columnWidths[0] });
 
-      // Mensaje del indicador
+      // Texto del resultado
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(colorTexto);
-      const messageX = margin + 250; // Ajustar la posición X del mensaje
-      const messageWidth = contentWidth - 250;
-      const messageLines = doc.splitTextToSize(message, messageWidth);
+      doc.text(resultado, columnX[1], yPos, { maxWidth: columnWidths[1] });
 
+      // Texto del mensaje
+      const messageLines = doc.splitTextToSize(message, columnWidths[2]);
       messageLines.forEach((line: string, index: number) => {
-        doc.text(line, messageX, yPos + (index * 15));
+        doc.text(line, columnX[2], yPos + (index * 15));
       });
 
-      return yPos + (messageLines.length * 15) + 15; // Retorna la nueva posición Y
+      // Calcular la nueva posición Y
+      const totalLines = Math.max(1, messageLines.length);
+      return yPos + (totalLines * 15) + 10; // Espaciado adicional entre filas
     };
 
     // Iniciar el documento
@@ -310,14 +318,14 @@ async generarPDF(download: boolean = true) {
     yPos += 20;
 
     // Indicadores con gráficos
-    yPos = await addIndicadorConGrafico('Índice de Frecuencia',formData.indiceFrecuencia?.mensaje || 'No disponible',yPos);
-    yPos = await addIndicadorConGrafico('Índice de Gravedad', formData.indiceGravedad?.mensaje || 'No disponible', yPos);
-    yPos = await addIndicadorConGrafico('Tasa de Riesgo', formData.tasaRiesgo?.mensaje || 'No disponible', yPos);
-    yPos = await addIndicadorConGrafico('Capacitaciones en Seguridad', formData.capacitacionesSeguridad?.resultado ? `${formData.capacitacionesSeguridad.resultado}%`: 'No disponible', yPos);
-    yPos = await addIndicadorConGrafico('Inspecciones de Seguridad', formData.inspeccionesSeguridad?.resultado ? `${formData.inspeccionesSeguridad.resultado}%`: 'No disponible', yPos);
-    yPos = await addIndicadorConGrafico('Observaciones de Condiciones Seguras', formData.observacionesCSeguros?.resultado ? `${formData.observacionesCSeguros.resultado}%`: 'No disponible', yPos);
-    yPos = await addIndicadorConGrafico('Corrección de Condiciones Inseguras', formData.correcionConInseguras?.resultado ? `${formData.correcionConInseguras.resultado}%`: 'No disponible', yPos);
-    yPos = await addIndicadorConGrafico('Cumplimiento del Uso de EPP', formData.cumplimientoUsoEPP?.resultado ? `${formData.cumplimientoUsoEPP.resultado}%`: 'No disponible', yPos);
+    yPos = await addIndicadorConGrafico('Índice de Frecuencia', formData.indiceFrecuencia?.resultado || 'No disponible', formData.indiceFrecuencia?.mensaje || 'No disponible', yPos);
+    yPos = await addIndicadorConGrafico('Índice de Gravedad', formData.indiceGravedad?.resultado || 'No disponible', formData.indiceGravedad?.mensaje || 'No disponible', yPos);
+    yPos = await addIndicadorConGrafico('Tasa de Riesgo', formData.tasaRiesgo?.resultado || 'No disponible', formData.tasaRiesgo?.mensaje || 'No disponible', yPos);
+    yPos = await addIndicadorConGrafico('Capacitaciones en Seguridad', formData.capacitacionesSeguridad?.resultado ? `${formData.capacitacionesSeguridad.resultado}%`: 'No disponible', formData.capacitacionesSeguridad?.mensaje || '', yPos);
+    yPos = await addIndicadorConGrafico('Inspecciones de Seguridad', formData.inspeccionesSeguridad?.resultado ? `${formData.inspeccionesSeguridad.resultado}%`: 'No disponible', formData.inspeccionesSeguridad?.mensaje || '', yPos);
+    yPos = await addIndicadorConGrafico('Observaciones de Condiciones Seguras', formData.observacionesCSeguros?.resultado ? `${formData.observacionesCSeguros.resultado}%`: 'No disponible', formData.observacionesCSeguros?.mensaje || '', yPos);
+    yPos = await addIndicadorConGrafico('Corrección de Condiciones Inseguras', formData.correcionConInseguras?.resultado ? `${formData.correcionConInseguras.resultado}%`: 'No disponible', formData.correcionConInseguras?.mensaje || '', yPos);
+    yPos = await addIndicadorConGrafico('Cumplimiento del Uso de EPP', formData.cumplimientoUsoEPP?.resultado ? `${formData.cumplimientoUsoEPP.resultado}%`: 'No disponible', formData.cumplimientoUsoEPP?.mensaje || '', yPos);
 
     // Guardar el PDF
     this.pdfSrc = doc.output('arraybuffer');

@@ -21,6 +21,7 @@ export class FormIndicadoresSHComponent implements OnInit {
     this.form = this.fb.group({
       indiceFrecuencia: this.fb.group({
         totalTrabajadores: [''],
+        totalHorasTrabajadas: [''],
         numerador: [, [Validators.required, Validators.min(0)]],
         denominador_total: [{ value: '', disabled: true }],
         denominador_horas: [{ value: '', disabled: true }],
@@ -189,16 +190,21 @@ onInputChange(fieldName: string, value: string): void {
     }
   }
 
-  onFocus(fieldName: string) {
-    this.focusedFields[fieldName] = true;
-  }
+// Función para manejar el enfoque de los inputs
+onFocus(fieldName: string) {
+  this.focusedFields[fieldName] = true;
+}
 
-  onBlur(fieldName: string) {
-    this.focusedFields[fieldName] = false;
-  }
+// Función para manejar el desenfoque de los inputs
+onBlur(fieldName: string) {
+  this.focusedFields[fieldName] = false;
+}
 
-  shouldFloatLabel(fieldName: string): boolean {
-    const control = this.form.get(fieldName);
-    return !!control?.value || !!this.focusedFields[fieldName];
-  }
+// Función para verificar si el label debe flotar
+shouldFloatLabel(fieldName: string): boolean {
+  return !!this.form.get(fieldName)?.value || !!this.focusedFields[fieldName];
+}
+get nombreEmpresa() {
+  return this.form.get('nombreEmpresa')?.value?.toUpperCase() || '';
+}
 }
