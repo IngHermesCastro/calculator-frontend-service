@@ -15,7 +15,15 @@ export class RiesgosService {
   private readonly _formCollection = collection(this._firestore, 'forms');
   private readonly _riesgosCollection = collection(this._firestore, 'riesgos');
   private readonly _provinciasCollection = collection(this._firestore, 'provincias')
+  private totalTrabajadoresSubject = new BehaviorSubject<number>(0);
+  totalTrabajadores$ = this.totalTrabajadoresSubject.asObservable();
   form: FormGroup;
+
+
+  setTotalTrabajadores(value: number) {
+    this.totalTrabajadoresSubject.next(value);
+  }
+
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
@@ -273,5 +281,27 @@ export class RiesgosService {
       monitorSeguridad: monitorSeguridad
     }, { emitEvent: false });
   }
+
+  clearForms() {
+    this.form.reset(); // Limpia todos los datos del formulario
+  }
+
+  // continuarForm1() {
+  //   if (this.form.valid && this.actividadSeleccionada) {
+  //     const formValue = this.form.getRawValue();
+  //     this.setForm1({
+  //       ...formValue,
+  //       actividadEconomica: this.actividadSeleccionada.descripcion
+  //     });
+  //     this.router.navigate(['/seguridad-higiene/form-indicadores-s-h']);
+  //   }
+  // }
+
+  // async continuarForm2() {
+  //   if (this.form.valid) {
+  //     this.setForm2(this.form.value); // Guardar datos temporalmente
+  //     this.router.navigate(['/seguridad-higiene/form-pdf']);
+  //   }
+  // }
 
 }

@@ -388,9 +388,9 @@ async generarPDF(download: boolean = true) {
 
   async continuar() {
     if (this.form.valid) {
-      this._formSvc.setForm2(this.form.value);
       try {
-        await this._formSvc.newForm();
+        // Aquí puedes guardar los datos finales si es necesario
+        this._formSvc.clearForms(); // Limpiar datos temporales
         this.router.navigate(['/seguridad-higiene']);
       } catch (error) {
         console.error('Error al guardar el formulario:', error);

@@ -103,8 +103,11 @@ export class FormInfoSHComponent implements OnInit {
     const cantidadHombres = formValue.cantidadHombres || 0;
     const cantidadMujeres = formValue.cantidadMujeres || 0;
     const totalTrabajadores = cantidadHombres + cantidadMujeres;
-    const rangoTrabajadores = this._formSvc.determinarRangoTrabajadores(totalTrabajadores);
 
+    // Enviar el valor al servicio
+    this._formSvc.setTotalTrabajadores(totalTrabajadores);
+
+    const rangoTrabajadores = this._formSvc.determinarRangoTrabajadores(totalTrabajadores);
     const tipoInstitucion = this._formSvc.setTipoEmpresa(totalTrabajadores);
     const nivelDeRiesgo = this.actividadSeleccionada?.nivel_de_riesgo || '';
     const horasMinimasGestion = this._formSvc.obtenerHorasMinimasGestion(tipoInstitucion, nivelDeRiesgo);

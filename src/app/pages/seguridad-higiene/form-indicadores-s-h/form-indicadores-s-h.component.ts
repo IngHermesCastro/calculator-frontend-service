@@ -71,6 +71,40 @@ export class FormIndicadoresSHComponent implements OnInit {
 
   ngOnInit(): void {
     this.iniciarForm();
+
+    // Suscribirse al valor de totalTrabajadores
+    this._formSvc.totalTrabajadores$.subscribe((totalTrabajadores) => {
+      const control = this.form.get('indiceFrecuencia.totalTrabajadores');
+      if (control) {
+        control.setValue(totalTrabajadores);
+        control.disable();
+
+        // Llamar manualmente a onInputChange para actualizar campos dependientes
+        this.onInputChange('totalTrabajadores', totalTrabajadores);
+      }
+
+      // Recalcular los campos dependientes
+      this.recalcularCamposDependientes();
+    });
+  }
+
+  private recalcularCamposDependientes() {
+    // Obtener el valor actual de totalTrabajadores
+    const totalTrabajadores = this.form.get('indiceFrecuencia.totalTrabajadores')?.value;
+
+    if (totalTrabajadores) {
+      // Actualizar manualmente los campos dependientes
+      const denominadorTotalControl = this.form.get('indiceFrecuencia.denominador_total');
+      if (denominadorTotalControl) {
+        denominadorTotalControl.setValue(totalTrabajadores);
+        denominadorTotalControl.disable();
+      }
+    }
+
+    // Recalcular los resultados de los indicadores
+    this.calcularResultado('indiceFrecuencia');
+    this.calcularResultado('indiceGravedad');
+    this.calcularResultado('tasaRiesgo');
   }
 
   iniciarForm() {
@@ -81,7 +115,7 @@ export class FormIndicadoresSHComponent implements OnInit {
           this.calcularResultado(indicador);
           if (indicador === 'indiceFrecuencia' || indicador === 'indiceGravedad') {
             this.calcularResultado('tasaRiesgo');
-        }
+          }
         });
       }
     });
@@ -89,31 +123,31 @@ export class FormIndicadoresSHComponent implements OnInit {
 
   public fieldMappings: { [key: string]: string[] } = {
     totalTrabajadores: [
-        'indiceFrecuencia.denominador_total',
-        'capacitacionesSeguridad.denominador', // Ejemplo: asignar también al denominador de capacitaciones
-        //'correcionConInseguras.denominador'    // Y al de corrección de condiciones inseguras
+      'indiceFrecuencia.denominador_total',
+      'capacitacionesSeguridad.denominador',
+      // 'correcionConInseguras.denominador'
     ],
     totalHorasTrabajadas: [
-        'indiceFrecuencia.denominador_horas',
-        'indiceGravedad.denominador'           // Ejemplo: asignar también al denominador del índice de gravedad
+      'indiceFrecuencia.denominador_horas',
+      'indiceGravedad.denominador'
     ]
-};
+  };
 
-// Reemplaza tu método onDatosEntradaChange con este:
-onInputChange(fieldName: string, value: string): void {
-    const numericValue = Number(value);
+  // Reemplaza tu método onDatosEntradaChange con este:
+  onInputChange(fieldName: string, value: string | number): void {
+    const numericValue = typeof value === 'string' ? Number(value) : value;
 
     // Verificar si el campo tiene mapeos definidos
     if (this.fieldMappings[fieldName]) {
-        this.fieldMappings[fieldName].forEach(controlPath => {
-            const control = this.form.get(controlPath);
-            if (control) {
-                control.setValue(numericValue);
-                control.disable();
-            }
-        });
+      this.fieldMappings[fieldName].forEach(controlPath => {
+        const control = this.form.get(controlPath);
+        if (control) {
+          control.setValue(numericValue);
+          control.disable();
+        }
+      });
     }
-}
+  }
 
   private generarMensajeProyeccion(resultado: number, indicador: string): string {
     const proyeccion = Number(resultado.toFixed(0));
@@ -128,52 +162,52 @@ onInputChange(fieldName: string, value: string): void {
           : 'No se han registrado días perdidos.';
       case 'tasaRiesgo':
         return proyeccion !== 0
-        ? `La empresa ha perdido ${proyeccion} día${proyeccion === 1 ? '' : 's'} debido a accidentes laborales.`
-        : 'No se han registrado días perdidos.';
+          ? `La empresa ha perdido ${proyeccion} día${proyeccion === 1 ? '' : 's'} debido a accidentes laborales.`
+          : 'No se han registrado días perdidos.';
       default:
         return `Resultado calculado: ${proyeccion}`;
     }
   }
 
   calcularResultado(indicador: string) {
-  const controls = this.form.get(indicador) as FormGroup;
-  if (controls) {
-    let numerador = controls.get('numerador')?.value || 0;
-    let denominador = controls.get('denominador')?.value || 1;
-    const denominador_t = controls.get('denominador_total')?.value || 1;
-    const denominador_h = controls.get('denominador_horas')?.value || 1;
-    const denominador_d = controls.get('denominador_dias')?.value || 1;
-    let resultado = 0;
+    const controls = this.form.get(indicador) as FormGroup;
+    if (controls) {
+      let numerador = controls.get('numerador')?.value || 0;
+      let denominador = controls.get('denominador')?.value || 1;
+      const denominador_t = controls.get('denominador_total')?.value || 1;
+      const denominador_h = controls.get('denominador_horas')?.value || 1;
+      const denominador_d = controls.get('denominador_dias')?.value || 1;
+      let resultado = 0;
 
-    switch (indicador) {
-      case 'indiceFrecuencia':
-        const ask = denominador_t * denominador_h * denominador_d;
-        resultado = denominador > 0 ? ((numerador * 200000) / ask) : 0;
-        break;
-      case 'indiceGravedad':
-        resultado = denominador > 0 ? ((numerador * 200000) / denominador) : 0;
-        break;
-      case 'tasaRiesgo':
-        const igValue = this.form.get('indiceGravedad.resultado')?.value || 0;
-        const ifValue = this.form.get('indiceFrecuencia.resultado')?.value || 1;
+      switch (indicador) {
+        case 'indiceFrecuencia':
+          const ask = denominador_t * denominador_h * denominador_d;
+          resultado = denominador > 0 ? ((numerador * 200000) / ask) : 0;
+          break;
+        case 'indiceGravedad':
+          resultado = denominador > 0 ? ((numerador * 200000) / denominador) : 0;
+          break;
+        case 'tasaRiesgo':
+          const igValue = this.form.get('indiceGravedad.resultado')?.value || 0;
+          const ifValue = this.form.get('indiceFrecuencia.resultado')?.value || 1;
 
-        controls.get('numerador')?.setValue(igValue, { emitEvent: false });
-        controls.get('denominador')?.setValue(ifValue, { emitEvent: false });
+          controls.get('numerador')?.setValue(igValue, { emitEvent: false });
+          controls.get('denominador')?.setValue(ifValue, { emitEvent: false });
 
-        resultado = ifValue > 0 ? (igValue / ifValue) : 0;
-        break;
-      default:
-        resultado = denominador > 0 ? (numerador / denominador) * 100 : 0;
+          resultado = ifValue > 0 ? (igValue / ifValue) : 0;
+          break;
+        default:
+          resultado = denominador > 0 ? (numerador / denominador) * 100 : 0;
+      }
+
+      controls.patchValue({ resultado: resultado.toFixed(0) }, { emitEvent: false });
+
+      // Generar y guardar el mensaje en el formulario
+      const mensaje = this.generarMensajeProyeccion(resultado, indicador);
+      controls.patchValue({ mensaje }, { emitEvent: false });
+      this.mensaje[indicador] = mensaje;
     }
-
-    controls.patchValue({ resultado: resultado.toFixed(0) }, { emitEvent: false });
-
-    // Generar y guardar el mensaje en el formulario
-    const mensaje = this.generarMensajeProyeccion(resultado, indicador);
-    controls.patchValue({ mensaje }, { emitEvent: false });
-    this.mensaje[indicador] = mensaje;
   }
-}
 
   regresar() {
     this.router.navigate(['seguridad-higiene/form-info-s-h']);
@@ -190,21 +224,21 @@ onInputChange(fieldName: string, value: string): void {
     }
   }
 
-// Función para manejar el enfoque de los inputs
-onFocus(fieldName: string) {
-  this.focusedFields[fieldName] = true;
-}
+  // Función para manejar el enfoque de los inputs
+  onFocus(fieldName: string) {
+    this.focusedFields[fieldName] = true;
+  }
 
-// Función para manejar el desenfoque de los inputs
-onBlur(fieldName: string) {
-  this.focusedFields[fieldName] = false;
-}
+  // Función para manejar el desenfoque de los inputs
+  onBlur(fieldName: string) {
+    this.focusedFields[fieldName] = false;
+  }
 
-// Función para verificar si el label debe flotar
-shouldFloatLabel(fieldName: string): boolean {
-  return !!this.form.get(fieldName)?.value || !!this.focusedFields[fieldName];
-}
-get nombreEmpresa() {
-  return this.form.get('nombreEmpresa')?.value?.toUpperCase() || '';
-}
+  // Función para verificar si el label debe flotar
+  shouldFloatLabel(fieldName: string): boolean {
+    return !!this.form.get(fieldName)?.value || !!this.focusedFields[fieldName];
+  }
+  get nombreEmpresa() {
+    return this.form.get('nombreEmpresa')?.value?.toUpperCase() || '';
+  }
 }
