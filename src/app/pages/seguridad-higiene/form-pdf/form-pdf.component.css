@@ -77,16 +77,7 @@ canvas {
   border-radius: 8px;
 }
 
-@media (max-width: 768px) {
-  .button-group {
-    flex-direction: column;
-  }
 
-  .btn {
-    width: 100%;
-    justify-content: center;
-  }
-}
 
 .pdf-preview-container {
   position: relative;
@@ -122,4 +113,21 @@ canvas {
 .card:hover {
   transform: translateY(-5px);
   box-shadow: var(--hover-shadow) !important;
+}
+
+@media (max-width: 768px) {
+  .pdf-preview-container {
+    padding: 5px;
+    min-height: 300px;
+    border-radius: 5px;
+
+  }
+  .button-group {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
