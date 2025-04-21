@@ -4,6 +4,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { FormInfoSHComponent } from './pages/seguridad-higiene/form-info-s-h/form-info-s-h.component';
 import { FormIndicadoresSHComponent } from './pages/seguridad-higiene/form-indicadores-s-h/form-indicadores-s-h.component';
 import { FormPdfComponent } from './pages/seguridad-higiene/form-pdf/form-pdf.component';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
     {
@@ -20,11 +21,13 @@ export const routes: Routes = [
             },
             {
                 path: "form-indicadores-s-h",
-                component: FormIndicadoresSHComponent
+                component: FormIndicadoresSHComponent,
+                canActivate: [authGuard]
             },
             {
                 path: "form-pdf",
-                component: FormPdfComponent
+                component: FormPdfComponent,
+                canActivate: [authGuard]
             }
         ]
     },

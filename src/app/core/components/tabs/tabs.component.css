@@ -87,6 +87,7 @@ body {
       /*padding: 6px 12px;*/
       padding:2px;
       gap: 10px;
+      flex-direction: column;
   }
 
   #logo-container img {

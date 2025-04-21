@@ -383,17 +383,19 @@ async generarPDF(download: boolean = true) {
   }
 
   regresar() {
+    this._formSvc.clearForms();
     this.router.navigate(['/seguridad-higiene/form-info-s-h']);
+
   }
 
   async continuar() {
     if (this.form.valid) {
       try {
-        // Aquí puedes guardar los datos finales si es necesario
-        this._formSvc.clearForms(); // Limpiar datos temporales
+        // Aquí debes limpiar los datos temporales y el formulario
+        this._formSvc.clearForms(); // Limpia datos temporales y resetea el formulario
         this.router.navigate(['/seguridad-higiene']);
       } catch (error) {
-        console.error('Error al guardar el formulario:', error);
+        console.error('Error al finalizar:', error);
       }
     }
   }

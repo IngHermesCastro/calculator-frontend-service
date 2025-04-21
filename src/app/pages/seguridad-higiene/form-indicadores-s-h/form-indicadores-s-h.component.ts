@@ -1,13 +1,20 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, inject, ViewEncapsulation, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { RiesgosService } from 'src/app/core/services/form.service';
 import { CommonModule } from '@angular/common';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { FormFieldCounterComponent } from "../../form-field-counter/form-field-counter.component";
+
+
+// Aqui vamos a empezar los cambios
+// ok
 
 @Component({
   selector: 'app-form-indicadores-s-h',
+  encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormFieldCounterComponent],
   templateUrl: './form-indicadores-s-h.component.html',
   styleUrls: ['./form-indicadores-s-h.component.css']
 })
@@ -17,11 +24,45 @@ export class FormIndicadoresSHComponent implements OnInit {
   focusedFields: { [key: string]: boolean } = {}; // Objeto para rastrear el estado de enfoque
   private readonly _formSvc = inject(RiesgosService);
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  // Propiedades para el modal
+  @ViewChild('diasCargoModal') diasCargoModal!: TemplateRef<any>;
+  modalRef!: NgbModalRef;
+  selectedNature: string = '';
+  selectedDays: number = 0;
+
+    // Tabla de días de cargo
+    tablaDiasCargo = [
+      { naturaleza: 'Muerte', jornadas: 6000 },
+      { naturaleza: 'Incapacidad permanente absoluta (I.P.A.)', jornadas: 6000 },
+      { naturaleza: 'Incapacidad permanente total (I.P.T.)', jornadas: 4500 },
+      { naturaleza: 'Pérdida del brazo por encima del codo', jornadas: 4500 },
+      { naturaleza: 'Pérdida del brazo por encima del codo o debajo', jornadas: 3600 },
+      { naturaleza: 'Pérdida de la mano', jornadas: 3000 },
+      { naturaleza: 'Pérdida o invalidez permanente del pulgar', jornadas: 600 },
+      { naturaleza: 'Pérdida o invalidez permanente de un dedo cualquiera', jornadas: 300 },
+      { naturaleza: 'Pérdida o invalidez permanente de dos dedos', jornadas: 750 },
+      { naturaleza: 'Pérdida o invalidez permanente de tres dedos', jornadas: 1200 },
+      { naturaleza: 'Pérdida o invalidez permanente de cuatro dedos', jornadas: 1800 },
+      { naturaleza: 'Pérdida o invalidez permanente del pulgar y un dedo', jornadas: 1200 },
+      { naturaleza: 'Pérdida o invalidez permanente del pulgar y dos dedos', jornadas: 1500 },
+      { naturaleza: 'Pérdida o invalidez permanente del pulgar y tres dedos', jornadas: 2000 },
+      { naturaleza: 'Pérdida o invalidez permanente del pulgar y cuatro dedos', jornadas: 2400 },
+      { naturaleza: 'Pérdida de una pierna por encima de la rodilla', jornadas: 4500 },
+      { naturaleza: 'Pérdida de una pierna por la rodilla o debajo', jornadas: 3000 },
+      { naturaleza: 'Pérdida del pie', jornadas: 2400 },
+      { naturaleza: 'Pérdida o invalidez permanente de dedo gordo o de dos o más dedos del pie', jornadas: 300 },
+      { naturaleza: 'Pérdida de la visión de un ojo', jornadas: 1800 },
+      { naturaleza: 'Ceguera total', jornadas: 6000 },
+      { naturaleza: 'Pérdida de un oído (uno solo)', jornadas: 600 },
+      { naturaleza: 'Sordera total', jornadas: 3000 }
+    ];
+
+  constructor(private fb: FormBuilder, private router: Router,  private modalService: NgbModal) {
     this.form = this.fb.group({
       indiceFrecuencia: this.fb.group({
         totalTrabajadores: [''],
-        totalHorasTrabajadas: [''],
+        totalHorasTrabajadas: ['', [Validators.required]],
+        totalDiasTrabajadas: ['', [Validators.required]],
         numerador: [, [Validators.required, Validators.min(0)]],
         denominador_total: [{ value: '', disabled: true }],
         denominador_horas: [{ value: '', disabled: true }],
@@ -30,7 +71,9 @@ export class FormIndicadoresSHComponent implements OnInit {
         mensaje: [''] // Agregar campo para el mensaje
       }),
       indiceGravedad: this.fb.group({
-        numerador: [, [Validators.required, Validators.min(0)]],
+        // numerador: [, [Validators.required, Validators.min(0)]],
+        diasPerdidos: [, [Validators.required, Validators.min(1)]],
+        diasCargo: [, [Validators.required, Validators.min(1)]],
         denominador: [, [Validators.required, Validators.min(1)]],
         resultado: [0],
         mensaje: [''] // Agregar campo para el mensaje
@@ -42,33 +85,50 @@ export class FormIndicadoresSHComponent implements OnInit {
         mensaje: [''] // Agregar campo para el mensaje
       }),
       capacitacionesSeguridad: this.fb.group({
-        numerador: [, [Validators.min(0)]],
+        numerador: [, [Validators.min(0), Validators.required]],
         denominador: [, [Validators.min(1)]],
         resultado: ['ND']
       }),
       inspeccionesSeguridad: this.fb.group({
-        numerador: [, [Validators.min(0)]],
-        denominador: [, [Validators.min(1)]],
+        numerador: [, [Validators.min(0), Validators.required]],
+        denominador: [, [Validators.min(1), Validators.required]],
         resultado: ['ND']
       }),
       observacionesCSeguros: this.fb.group({
-        numerador: [, [Validators.min(0)]],
-        denominador: [, [Validators.min(1)]],
+        numerador: [, [Validators.min(0), Validators.required]],
+        denominador: [, [Validators.min(1), Validators.required]],
         resultado: ['ND']
       }),
       correcionConInseguras: this.fb.group({
-        numerador: [, [Validators.min(0)]],
-        denominador: [, [Validators.min(1)]],
+        numerador: [, [Validators.min(0), Validators.required]],
+        denominador: [, [Validators.min(1), Validators.required]],
         resultado: ['ND']
       }),
       cumplimientoUsoEPP: this.fb.group({
-        numerador: [, [Validators.min(0)]],
-        denominador: [, [Validators.min(1)]],
+        numerador: [, [Validators.min(0), Validators.required]],
+        denominador: [, [Validators.min(1), Validators.required]],
         resultado: ['ND']
       })
     });
   }
+// Método para abrir el modal
+openDiasCargoModal() {
+  this.modalRef = this.modalService.open(this.diasCargoModal, {
+    size: 'lg',
+    centered: true,
+    backdrop: 'static',
+    windowClass: 'dias-cargo-modal'
+  });
+}
 
+// Método para seleccionar días de cargo
+selectDiasCargo(naturaleza: string, jornadas: number) {
+  this.selectedNature = naturaleza;
+  this.selectedDays = jornadas;
+  this.form.get('indiceGravedad.diasCargo')?.setValue(jornadas);
+  this.modalRef.close();
+  this.calcularResultado('indiceGravedad');
+}
   ngOnInit(): void {
     this.iniciarForm();
 
@@ -130,7 +190,12 @@ export class FormIndicadoresSHComponent implements OnInit {
     totalHorasTrabajadas: [
       'indiceFrecuencia.denominador_horas',
       'indiceGravedad.denominador'
-    ]
+    ],
+    totalDiasTrabajadas: [
+      'indiceFrecuencia.denominador_dias',
+      // 'indiceGravedad.denominador'
+    ],
+
   };
 
   // Reemplaza tu método onDatosEntradaChange con este:
@@ -150,11 +215,13 @@ export class FormIndicadoresSHComponent implements OnInit {
   }
 
   private generarMensajeProyeccion(resultado: number, indicador: string): string {
-    const proyeccion = Number(resultado.toFixed(0));
+    const proyeccion = Number(resultado.toFixed(2));
     switch (indicador) {
       case 'indiceFrecuencia':
         return proyeccion !== 0
-          ? `Al completarse las 200 mil horas de trabajo, se proyecta${proyeccion === 1 ? '' : 'n'} ${proyeccion} accidente${proyeccion === 1 ? '.' : 's.'}`
+          // ? `Al completarse las 200 mil horas de trabajo, se proyecta${proyeccion === 1 ? '' : 'n'} ${proyeccion} accidente${proyeccion === 1 ? '.' : 's.'}`
+          // : 'No se han registrado accidentes.';
+          ? `Cuando la empresa haya completado 200mil horas de trabajo tendrá ${proyeccion} accidente${proyeccion === 1 ? '.' : 's.'}`
           : 'No se han registrado accidentes.';
       case 'indiceGravedad':
         return proyeccion !== 0
@@ -162,7 +229,8 @@ export class FormIndicadoresSHComponent implements OnInit {
           : 'No se han registrado días perdidos.';
       case 'tasaRiesgo':
         return proyeccion !== 0
-          ? `La empresa ha perdido ${proyeccion} día${proyeccion === 1 ? '' : 's'} debido a accidentes laborales.`
+          // ? `La empresa ha perdido ${proyeccion} día${proyeccion === 1 ? '' : 's'} debido a accidentes laborales.`
+          ? `Cada vez que ocurre un accidente con baja, la empresa pierde en promedio  ${proyeccion} dia${proyeccion === 1 ? '' : 's'} de trabajo.`
           : 'No se han registrado días perdidos.';
       default:
         return `Resultado calculado: ${proyeccion}`;
@@ -177,6 +245,8 @@ export class FormIndicadoresSHComponent implements OnInit {
       const denominador_t = controls.get('denominador_total')?.value || 1;
       const denominador_h = controls.get('denominador_horas')?.value || 1;
       const denominador_d = controls.get('denominador_dias')?.value || 1;
+      const diasPerdidos = controls.get('diasPerdidos')?.value || 1;
+      const diasCargo = controls.get('diasCargo')?.value || 1;
       let resultado = 0;
 
       switch (indicador) {
@@ -185,7 +255,8 @@ export class FormIndicadoresSHComponent implements OnInit {
           resultado = denominador > 0 ? ((numerador * 200000) / ask) : 0;
           break;
         case 'indiceGravedad':
-          resultado = denominador > 0 ? ((numerador * 200000) / denominador) : 0;
+          const sum = diasCargo + diasPerdidos;
+          resultado = denominador > 0 ? ( (sum * 200000) / denominador) : 0;
           break;
         case 'tasaRiesgo':
           const igValue = this.form.get('indiceGravedad.resultado')?.value || 0;

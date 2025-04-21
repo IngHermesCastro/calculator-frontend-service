@@ -1,0 +1,63 @@
+<!-- form-field-counter.component.html -->
+<div class="counter-container">
+  <!-- Panel de detalles (visible cuando showDetails es true) -->
+  <div *ngIf="showDetails" class="details-panel">
+    <h4 class="details-title">Estado del formulario</h4>
+
+    <ng-container *ngIf="completedFields.length > 0">
+      <p class="field-category">Campos completados:</p>
+      <ul class="fields-list completed">
+        <li *ngFor="let field of completedFields" class="field-item">
+          <i class="bi bi-check-circle-fill"></i>
+          {{ getFieldLabel(field) }}
+        </li>
+      </ul>
+    </ng-container>
+
+    <ng-container *ngIf="remainingFields.length > 0">
+      <p class="field-category">Campos pendientes:</p>
+      <ul class="fields-list pending">
+        <li *ngFor="let field of remainingFields" class="field-item">
+          <i class="bi bi-plus-circle"></i>
+          {{ getFieldLabel(field) }}
+        </li>
+      </ul>
+    </ng-container>
+
+    <div *ngIf="pendingFields === 0" class="all-completed">
+      ¡Todos los campos completados!
+    </div>
+  </div>
+
+  <!-- Botón contador flotante -->
+  <button
+  (click)="toggleDetails()"
+  [ngClass]="[
+    'counter-button',
+    getCounterColor(),
+    bounce ? 'bounce' : ''
+  ]"
+>
+    <div class="counter-content">
+      <span class="counter-number">{{ pendingFields }}</span>
+      <span class="counter-text">{{ getCounterText() }}</span>
+      <i *ngIf="pendingFields === 0" class="bi bi-check-lg"></i>
+      <i *ngIf="pendingFields > 0" class="bi bi-question-circle"></i>
+    </div>
+  </button>
+</div>
+
+<script>
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common'; // Ensure CommonModule is imported
+import { FormFieldCounterComponent } from './form-field-counter.component';
+
+@NgModule({
+  declarations: [FormFieldCounterComponent],
+  imports: [CommonModule], // Add CommonModule to imports
+  exports: [FormFieldCounterComponent],
+})
+export class FormFieldCounterModule {}
+</script>
+
+

@@ -30,7 +30,7 @@ export class SeguridadHigieneComponent {
   irAlFormulario() {
     Swal.fire({
       icon: "warning",
-      title: "IMPORTANTE",
+      title: "Importante",
       html: `
         <div style="text-align: left;">
           <p>Los datos que usted ingresa en esta plataforma:</p>

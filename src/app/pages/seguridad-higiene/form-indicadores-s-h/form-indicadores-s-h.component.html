@@ -12,67 +12,76 @@
           <div class="indicators-section">
             <div class="card-header text-white">
               <div class="header-container">
-                <i class="bi bi-info-square-fill fs-1 justify-self-end"></i><h4>INGRESA TUS DATOS INICIALES</h4>
+                <i class="bi bi-info-square-fill fs-1 justify-self-end"></i>
+                <h4>INGRESA TUS DATOS INICIALES</h4>
               </div>
             </div>
 
             <div class="indicator-group" formGroupName="indiceFrecuencia">
               <!-- <div class="indicator-label">Índice de Frecuencia (IF)</div> -->
-               <div class="datosIniciales_Principal">
-              <div class="formula-container">
-                <div class="fraction">
-                  <div class="denominator">
-                    <div class="denominator__inputs">
-                      <!-- Contenedor datosEntrada -->
-                      <div class="datosEntrada">
-                        <!-- Campo TOTAL TRABAJADORES -->
-                        <div class="form-group position-relative">
-                          <label for="totalTrabajadores"
-                                 [class.float-label]="shouldFloatLabel('indiceFrecuencia.totalTrabajadores')">
-                            TOTAL TRABAJADORES
-                          </label>
-                          <input
-                            id="totalTrabajadores"
-                            type="number"
-                            formControlName="totalTrabajadores"
-                            (input)="onInputChange('totalTrabajadores', $any($event.target).value)"
-                            (focus)="onFocus('indiceFrecuencia.totalTrabajadores')"
-                            (blur)="onBlur('indiceFrecuencia.totalTrabajadores')"
-                          >
-                        </div>
+              <div class="datosIniciales_Principal">
+                <div class="formula-container">
+                  <div class="fraction">
+                    <div class="denominator">
+                      <div class="denominator__inputs">
+                        <!-- Contenedor datosEntrada -->
+                        <div class="datosEntrada">
+                          <!-- Campo TOTAL TRABAJADORES -->
+                          <div class="form-group position-relative">
+                            <label for="totalTrabajadores"
+                              [class.float-label]="shouldFloatLabel('indiceFrecuencia.totalTrabajadores')">
+                              TOTAL TRABAJADORES
+                            </label>
+                            <input id="totalTrabajadores" type="number" formControlName="totalTrabajadores"
+                              (input)="onInputChange('totalTrabajadores', $any($event.target).value)"
+                              (focus)="onFocus('indiceFrecuencia.totalTrabajadores')"
+                              (blur)="onBlur('indiceFrecuencia.totalTrabajadores')">
+                          </div>
 
                           <!-- Campo para TOTAL HORAS TRABAJADAS -->
                           <div class="form-group position-relative">
                             <label for="totalHorasTrabajadas"
-                                   [class.float-label]="shouldFloatLabel('indiceFrecuencia.totalHorasTrabajadas')">
-                              TOTAL HORAS TRABAJADAS/MES
+                              [class.float-label]="shouldFloatLabel('indiceFrecuencia.totalHorasTrabajadas')">
+                              TOTAL HORAS TRABAJADAS/DIA
                             </label>
-                            <input
-                              id="totalHorasTrabajadas"
-                              type="number"
-                              formControlName="totalHorasTrabajadas"
+                            <input id="totalHorasTrabajadas" type="number" formControlName="totalHorasTrabajadas"
                               (input)="onInputChange('totalHorasTrabajadas', $any($event.target).value)"
                               (focus)="onFocus('indiceFrecuencia.totalHorasTrabajadas')"
-                              (blur)="onBlur('indiceFrecuencia.totalHorasTrabajadas')"
-                            >
+                              (blur)="onBlur('indiceFrecuencia.totalHorasTrabajadas')">
+                            <div class="invalid-feedback"
+                              *ngIf="form.get('totalHorasTrabajadas')?.touched && form.get('totalHorasTrabajadas')?.invalid">
+                              Este campo es requerido.
+                            </div>
+                          </div>
+
+                          <!-- Campo para TOTAL DIAS TRABAJADAS -->
+                          <div class="form-group position-relative">
+                            <label for="totalDiasTrabajadas"
+                              [class.float-label]="shouldFloatLabel('indiceFrecuencia.totalDiasTrabajadas')">
+                              DIAS TRABAJADOS
+                            </label>
+                            <input id="totalDiasTrabajadas" type="number" formControlName="totalDiasTrabajadas"
+                              (input)="onInputChange('totalDiasTrabajadas', $any($event.target).value)"
+                              (focus)="onFocus('indiceFrecuencia.totalDiasTrabajadas')"
+                              (blur)="onBlur('indiceFrecuencia.totalDiasTrabajadas')">
                           </div>
                         </div>
                       </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
             </div>
           </div>
 
           <!-- SECCION, INDICADORES REACTIVOS -->
           <div class="indicators-section">
-            <div class="card-header text-white">
+            <div class="card-header text-white d-flex flex-wrap align-items-center">
               <div class="header-container">
-                <i class="bi-exclamation-triangle-fill fs-1 justify-self-end"></i><h4>INDICADORES REACTIVOS</h4>
+                <i class="bi-exclamation-triangle-fill fs-1 justify-self-end"></i>
+                <h4>INDICADORES REACTIVOS</h4>
               </div>
             </div>
-
             <div class="indicator-group" formGroupName="indiceFrecuencia">
               <div class="indicator-label">Índice de Frecuencia (IF)</div>
               <div class="formula-container">
@@ -83,14 +92,9 @@
                       <label for="numerador" [class.float-label]="shouldFloatLabel('indiceFrecuencia.numerador')">
                         NUMERO DE LESIONES
                       </label>
-                      <input
-                        id="numerador"
-                        type="number"
-                        formControlName="numerador"
-                        placeholder=""
-                        (focus)="onFocus('indiceFrecuencia.numerador')"
-                        (blur)="onBlur('indiceFrecuencia.numerador')"
-                      >
+                      <input id="numerador" type="number" formControlName="numerador" placeholder=""
+                        (focus)="onFocus('indiceFrecuencia.numerador')" (blur)="onBlur('indiceFrecuencia.numerador')">
+
                     </div>
                   </div>
                   <div class="division-line"></div>
@@ -98,62 +102,48 @@
                   <div class="demoniadorPrincipal">
                     <div class="denominadorCampos">
                       <!-- <div class="denominator"> -->
-                        <!-- TOTAL TRABAJADORES -->
-                        <div class="campoOne" >
-                            <div class="form-group position-relative">
-                              <label for="ifDenominadorTotal" [class.float-label]="shouldFloatLabel('indiceFrecuencia.denominador_total')">
-                                TOTAL TRABAJADORES
-                              </label>
-                              <input
-                                id="ifDenominadorTotal"
-                                type="number"
-                                formControlName="denominador_total"
-                                placeholder=""
-                                (focus)="onFocus('indiceFrecuencia.denominador_total')"
-                                (blur)="onBlur('indiceFrecuencia.denominador_total')"
-                                [disabled]="true"
-                              >
-                            </div>
-                          </div>
-                          <!-- <div class="multiply">x</div> -->
-
-
-                        <!-- HORAS TRABAJADAS -->
-                        <div class="campoTwo">
-                            <div class="form-group position-relative">
-                              <label class="label_2" for="ifDenominadorHoras" [class.float-label]="shouldFloatLabel('indiceFrecuencia.denominador_horas')">
-                                HORAS TRABAJADAS
-                              </label>
-                              <input
-                                id="ifDenominadorHoras"
-                                type="number"
-                                formControlName="denominador_horas"
-                                placeholder=""
-                                (focus)="onFocus('indiceFrecuencia.denominador_horas')"
-                                (blur)="onBlur('indiceFrecuencia.denominador_horas')"
-                                [disabled]="true"
-                              >
-                            </div>
+                      <!-- TOTAL TRABAJADORES -->
+                      <div class="campoOne">
+                        <div class="form-group position-relative">
+                          <label for="ifDenominadorTotal"
+                            [class.float-label]="shouldFloatLabel('indiceFrecuencia.denominador_total')">
+                            TOTAL TRABAJADORES
+                          </label>
+                          <input id="ifDenominadorTotal" type="number" formControlName="denominador_total"
+                            placeholder="" (focus)="onFocus('indiceFrecuencia.denominador_total')"
+                            (blur)="onBlur('indiceFrecuencia.denominador_total')" [disabled]="true">
                         </div>
-                        <!-- <div class="multiply">x</div> -->
+                      </div>
 
-                                    <!-- DÍAS TRABAJADOS -->
-                        <div class="campoThree">
-                            <div class="form-group position-relative">
-                              <label class="label_3" for="ifDenominadorDias" [class.float-label]="shouldFloatLabel('indiceFrecuencia.denominador_dias')">
-                                DÍAS TRABAJADOS
-                              </label>
-                              <input
-                                id="ifDenominadorDias"
-                                type="number"
-                                formControlName="denominador_dias"
-                                placeholder=""
-                                (focus)="onFocus('indiceFrecuencia.denominador_dias')"
-                                (blur)="onBlur('indiceFrecuencia.denominador_dias')"
-                                min="1"
-                              >
-                            </div>
+                      <div class="multiply">x</div>
+
+
+                      <!-- HORAS TRABAJADAS -->
+                      <div class="campoTwo">
+                        <div class="form-group position-relative">
+                          <label class="label_2" for="ifDenominadorHoras"
+                            [class.float-label]="shouldFloatLabel('indiceFrecuencia.denominador_horas')">
+                            HORAS TRABAJADAS
+                          </label>
+                          <input id="ifDenominadorHoras" type="number" formControlName="denominador_horas"
+                            placeholder="" (focus)="onFocus('indiceFrecuencia.denominador_horas')"
+                            (blur)="onBlur('indiceFrecuencia.denominador_horas')" [disabled]="true">
                         </div>
+                      </div>
+                      <div class="multiply">x</div>
+
+                      <!-- DÍAS TRABAJADOS -->
+                      <div class="campoThree">
+                        <div class="form-group position-relative">
+                          <label class="label_3" for="ifDenominadorDias"
+                            [class.float-label]="shouldFloatLabel('indiceFrecuencia.denominador_dias')">
+                            DÍAS TRABAJADOS
+                          </label>
+                          <input id="ifDenominadorDias" type="number" formControlName="denominador_dias" placeholder=""
+                            (focus)="onFocus('indiceFrecuencia.denominador_dias')"
+                            (blur)="onBlur('indiceFrecuencia.denominador_dias')" min="1">
+                        </div>
+                      </div>
                       <!-- </div> -->
                     </div>
                   </div>
@@ -174,35 +164,60 @@
               <div class="indicator-label">Índice de Gravedad (IG)</div>
               <div class="formula-container">
                 <div class="fraction">
-                  <div class="numerator">
-                    <div class="form-group position-relative">
-                      <label for="igNumerador" [class.float-label]="shouldFloatLabel('indiceGravedad.numerador')">
-                        DÍAS PERDIDOS
-                      </label>
-                      <input
-                        id="igNumerador"
-                        type="number"
-                        formControlName="numerador"
-                        placeholder=""
-                        (focus)="onFocus('indiceGravedad.numerador')"
-                        (blur)="onBlur('indiceGravedad.numerador')"
-                      >
+                  <div class="demoniadorPrincipal">
+                    <div class="numeradorCampos">
+                      <!--Nummerador-->
+                      <!--AQUI ESTOOOOOOOOOOY TRABAJANDO EN EL NUMERO DE DIAS PERDIDOS Y DIAS DE CARGO-->
+                      <div class="numerator">
+                        <div class="form-group position-relative">
+                          <label for="diasPerdidos"
+                            [class.float-label]="shouldFloatLabel('indiceGravedad.diasPerdidos')">
+                            DÍAS PERDIDOS
+                          </label>
+                          <input id="diasPerdidos" type="number" formControlName="diasPerdidos" placeholder=""
+                            (focus)="onFocus('indiceGravedad.diasPerdidos')"
+                            (blur)="onBlur('indiceGravedad.diasPerdidos')">
+                        </div>
+                      </div>
+                      <div class="suma">+</div>
+                      <div class="numerator">
+                        <div class="dias-cargo-container">
+                          <div class="form-group position-relative" style="flex-grow: 1;">
+                            <label for="diasCargo" [class.float-label]="shouldFloatLabel('indiceGravedad.diasCargo')">
+                              DIAS DE CARGO
+                            </label>
+                            <input id="diasCargo" type="number" formControlName="diasCargo" placeholder=""
+                              (focus)="onFocus('indiceGravedad.diasCargo')" (blur)="onBlur('indiceGravedad.diasCargo')"
+                              [value]="selectedDays">
+                          </div>
+
+
+
+                        </div>
+
+                      </div>
+                      <div class="btnTablaDiasCargo">
+                        <button type="button" class="btn-info-table" title="INDICES DE SINIESTARLIDAD"
+                          (click)="openDiasCargoModal()">
+                          <i class="bi bi-table"> Indices</i>
+                        </button>
+                      </div>
                     </div>
                   </div>
+
+
+
+
                   <div class="division-line"></div>
+
+                  <!--Denominador-->
                   <div class="denominator">
                     <div class="form-group position-relative">
                       <label for="igDenominador" [class.float-label]="shouldFloatLabel('indiceGravedad.denominador')">
                         HORAS TRABAJADAS
                       </label>
-                      <input
-                        id="igDenominador"
-                        type="number"
-                        formControlName="denominador"
-                        placeholder=""
-                        (focus)="onFocus('indiceGravedad.denominador')"
-                        (blur)="onBlur('indiceGravedad.denominador')"
-                      >
+                      <input id="igDenominador" type="number" formControlName="denominador" placeholder=""
+                        (focus)="onFocus('indiceGravedad.denominador')" (blur)="onBlur('indiceGravedad.denominador')">
                     </div>
                   </div>
                 </div>
@@ -225,15 +240,8 @@
                       <label for="trNumerador" [class.float-label]="shouldFloatLabel('tasaRiesgo.numerador')">
                         DÍAS PERDIDOS (IG)
                       </label>
-                      <input
-                        id="trNumerador"
-                        type="number"
-                        formControlName="numerador"
-                        placeholder=""
-                        readonly
-                        (focus)="onFocus('tasaRiesgo.numerador')"
-                        (blur)="onBlur('tasaRiesgo.numerador')"
-                      >
+                      <input id="trNumerador" type="number" formControlName="numerador" placeholder="" readonly
+                        (focus)="onFocus('tasaRiesgo.numerador')" (blur)="onBlur('tasaRiesgo.numerador')">
                     </div>
                   </div>
                   <div class="division-line"></div>
@@ -242,15 +250,8 @@
                       <label for="trDenominador" [class.float-label]="shouldFloatLabel('tasaRiesgo.denominador')">
                         LESIONES (IF)
                       </label>
-                      <input
-                        id="trDenominador"
-                        type="number"
-                        formControlName="denominador"
-                        placeholder=""
-                        readonly
-                        (focus)="onFocus('tasaRiesgo.denominador')"
-                        (blur)="onBlur('tasaRiesgo.denominador')"
-                      >
+                      <input id="trDenominador" type="number" formControlName="denominador" placeholder="" readonly
+                        (focus)="onFocus('tasaRiesgo.denominador')" (blur)="onBlur('tasaRiesgo.denominador')">
                     </div>
                   </div>
                 </div>
@@ -259,6 +260,9 @@
                   <div class="result-value">{{form.get('tasaRiesgo')?.get('resultado')?.value || 0}}</div>
                 </div>
               </div>
+              <div class="indicator-group__mensaje">
+                <p class="mensaje-texto">{{ mensaje['tasaRiesgo'] }}</p>
+              </div>
             </div>
           </div>
 
@@ -266,52 +270,44 @@
           <div class="indicators-section">
             <div class="card-header text-white">
               <div class="header-container">
-                <i class="bi-bandaid-fill fs-1"></i><h4>INDICADORES PROACTIVOS</h4>
+                <i class="bi-bandaid-fill fs-1"></i>
+                <h4>INDICADORES PROACTIVOS</h4>
               </div>
             </div>
 
             <div class="indicator-group" formGroupName="capacitacionesSeguridad">
               <div class="indicator-label">Capacitaciones de Seguridad</div>
-                <div class="formula-container">
-                  <div class="fraction">
-                    <!-- Numerador -->
-                    <div class="numerator">
-                      <div class="form-group position-relative">
-                        <label for="capNumerador" [class.float-label]="shouldFloatLabel('capacitacionesSeguridad.numerador')">
-                          TRABAJADORES CAPACITADOS
-                        </label>
-                        <input
-                          id="capNumerador"
-                          type="number"
-                          formControlName="numerador"
-                          placeholder=""
-                          (focus)="onFocus('capacitacionesSeguridad.numerador')"
-                          (blur)="onBlur('capacitacionesSeguridad.numerador')"
-                        >
-                      </div>
+              <div class="formula-container">
+                <div class="fraction">
+                  <!-- Numerador -->
+                  <div class="numerator">
+                    <div class="form-group position-relative">
+                      <label for="capNumerador"
+                        [class.float-label]="shouldFloatLabel('capacitacionesSeguridad.numerador')">
+                        TRABAJADORES CAPACITADOS
+                      </label>
+                      <input id="capNumerador" type="number" formControlName="numerador" placeholder=""
+                        (focus)="onFocus('capacitacionesSeguridad.numerador')"
+                        (blur)="onBlur('capacitacionesSeguridad.numerador')">
                     </div>
+                  </div>
                   <div class="division-line"></div>
                   <!-- Denominador -->
                   <div class="denominator">
                     <div class="form-group position-relative">
-                      <label for="capDenominador" [class.float-label]="shouldFloatLabel('capacitacionesSeguridad.denominador')">
+                      <label for="capDenominador"
+                        [class.float-label]="shouldFloatLabel('capacitacionesSeguridad.denominador')">
                         TOTAL TRABAJADORES
                       </label>
-                      <input
-                        id="capDenominador"
-                        type="number"
-
-                        formControlName="denominador"
-                        placeholder=""
+                      <input id="capDenominador" type="number" formControlName="denominador" placeholder=""
                         (focus)="onFocus('capacitacionesSeguridad.denominador')"
-                        (blur)="onBlur('capacitacionesSeguridad.denominador')"
-                      />
+                        (blur)="onBlur('capacitacionesSeguridad.denominador')" />
                     </div>
                   </div>
                 </div>
                 <div class="multiply">×</div>
                 <div class="result-value-p">
-                 <div class="constant">100</div>
+                  <div class="constant">100</div>
                 </div>
                 <div class="result">=</div>
                 <div class="result-value-p">
@@ -327,33 +323,25 @@
                 <div class="fraction">
                   <div class="numerator">
                     <div class="form-group position-relative">
-                      <label for="insNumerador" [class.float-label]="shouldFloatLabel('inspeccionesSeguridad.numerador')">
+                      <label for="insNumerador"
+                        [class.float-label]="shouldFloatLabel('inspeccionesSeguridad.numerador')">
                         INSPECCIONES REALIZADAS
                       </label>
-                      <input
-                        id="insNumerador"
-                        type="number"
-                        formControlName="numerador"
-                        placeholder=""
+                      <input id="insNumerador" type="number" formControlName="numerador" placeholder=""
                         (focus)="onFocus('inspeccionesSeguridad.numerador')"
-                        (blur)="onBlur('inspeccionesSeguridad.numerador')"
-                      >
+                        (blur)="onBlur('inspeccionesSeguridad.numerador')">
                     </div>
                   </div>
                   <div class="division-line"></div>
                   <div class="denominator">
                     <div class="form-group position-relative">
-                      <label for="insDenominador" [class.float-label]="shouldFloatLabel('inspeccionesSeguridad.denominador')">
+                      <label for="insDenominador"
+                        [class.float-label]="shouldFloatLabel('inspeccionesSeguridad.denominador')">
                         INSPECCIONES PLANEADAS
                       </label>
-                      <input
-                        id="insDenominador"
-                        type="number"
-                        formControlName="denominador"
-                        placeholder=""
+                      <input id="insDenominador" type="number" formControlName="denominador" placeholder=""
                         (focus)="onFocus('inspeccionesSeguridad.denominador')"
-                        (blur)="onBlur('inspeccionesSeguridad.denominador')"
-                      >
+                        (blur)="onBlur('inspeccionesSeguridad.denominador')">
                     </div>
                   </div>
                 </div>
@@ -374,33 +362,25 @@
                 <div class="fraction">
                   <div class="numerator">
                     <div class="form-group position-relative">
-                      <label for="obsNumerador" [class.float-label]="shouldFloatLabel('observacionesCSeguros.numerador')">
+                      <label for="obsNumerador"
+                        [class.float-label]="shouldFloatLabel('observacionesCSeguros.numerador')">
                         COMPORTAMIENTOS SEGUROS
                       </label>
-                      <input
-                        id="obsNumerador"
-                        type="number"
-                        formControlName="numerador"
-                        placeholder=""
+                      <input id="obsNumerador" type="number" formControlName="numerador" placeholder=""
                         (focus)="onFocus('observacionesCSeguros.numerador')"
-                        (blur)="onBlur('observacionesCSeguros.numerador')"
-                      >
+                        (blur)="onBlur('observacionesCSeguros.numerador')">
                     </div>
                   </div>
                   <div class="division-line"></div>
                   <div class="denominator">
                     <div class="form-group position-relative">
-                      <label for="obsDenominador" [class.float-label]="shouldFloatLabel('observacionesCSeguros.denominador')">
+                      <label for="obsDenominador"
+                        [class.float-label]="shouldFloatLabel('observacionesCSeguros.denominador')">
                         TOTAL OBSERVACIONES
                       </label>
-                      <input
-                        id="obsDenominador"
-                        type="number"
-                        formControlName="denominador"
-                        placeholder=""
+                      <input id="obsDenominador" type="number" formControlName="denominador" placeholder=""
                         (focus)="onFocus('observacionesCSeguros.denominador')"
-                        (blur)="onBlur('observacionesCSeguros.denominador')"
-                      >
+                        (blur)="onBlur('observacionesCSeguros.denominador')">
                     </div>
                   </div>
                 </div>
@@ -421,33 +401,25 @@
                 <div class="fraction">
                   <div class="numerator">
                     <div class="form-group position-relative">
-                      <label for="corrNumerador" [class.float-label]="shouldFloatLabel('correcionConInseguras.numerador')">
+                      <label for="corrNumerador"
+                        [class.float-label]="shouldFloatLabel('correcionConInseguras.numerador')">
                         CONDICIONES CORREGIDAS
                       </label>
-                      <input
-                        id="corrNumerador"
-                        type="number"
-                        formControlName="numerador"
-                        placeholder=""
+                      <input id="corrNumerador" type="number" formControlName="numerador" placeholder=""
                         (focus)="onFocus('correcionConInseguras.numerador')"
-                        (blur)="onBlur('correcionConInseguras.numerador')"
-                      >
+                        (blur)="onBlur('correcionConInseguras.numerador')">
                     </div>
                   </div>
                   <div class="division-line"></div>
                   <div class="denominator">
                     <div class="form-group position-relative">
-                      <label for="corrDenominador" [class.float-label]="shouldFloatLabel('correcionConInseguras.denominador')">
+                      <label for="corrDenominador"
+                        [class.float-label]="shouldFloatLabel('correcionConInseguras.denominador')">
                         CONDICIONES DETECTADAS
                       </label>
-                      <input
-                        id="corrDenominador"
-                        type="number"
-                        formControlName="denominador"
-                        placeholder=""
+                      <input id="corrDenominador" type="number" formControlName="denominador" placeholder=""
                         (focus)="onFocus('correcionConInseguras.denominador')"
-                        (blur)="onBlur('correcionConInseguras.denominador')"
-                      >
+                        (blur)="onBlur('correcionConInseguras.denominador')">
                     </div>
                   </div>
                 </div>
@@ -472,30 +444,21 @@
                       <label for="eppNumerador" [class.float-label]="shouldFloatLabel('cumplimientoUsoEPP.numerador')">
                         USO CORRECTO EPP
                       </label>
-                      <input
-                        id="eppNumerador"
-                        type="number"
-                        formControlName="numerador"
-                        placeholder=""
+                      <input id="eppNumerador" type="number" formControlName="numerador" placeholder=""
                         (focus)="onFocus('cumplimientoUsoEPP.numerador')"
-                        (blur)="onBlur('cumplimientoUsoEPP.numerador')"
-                      >
+                        (blur)="onBlur('cumplimientoUsoEPP.numerador')">
                     </div>
                   </div>
                   <div class="division-line"></div>
                   <div class="denominator">
                     <div class="form-group position-relative">
-                      <label for="eppDenominador" [class.float-label]="shouldFloatLabel('cumplimientoUsoEPP.denominador')">
+                      <label for="eppDenominador"
+                        [class.float-label]="shouldFloatLabel('cumplimientoUsoEPP.denominador')">
                         TOTAL OBSERVADOS
                       </label>
-                      <input
-                        id="eppDenominador"
-                        type="number"
-                        formControlName="denominador"
-                        placeholder=""
+                      <input id="eppDenominador" type="number" formControlName="denominador" placeholder=""
                         (focus)="onFocus('cumplimientoUsoEPP.denominador')"
-                        (blur)="onBlur('cumplimientoUsoEPP.denominador')"
-                      >
+                        (blur)="onBlur('cumplimientoUsoEPP.denominador')">
                     </div>
                   </div>
                 </div>
@@ -512,6 +475,7 @@
           </div>
         </div>
 
+
         <div class="row mt-3">
           <div class="col-12 d-flex justify-content-between">
             <button type="button" class="btn btn-outline-primary" (click)="regresar()">
@@ -525,4 +489,60 @@
       </form>
     </div>
   </div>
+  <app-form-field-counter [form]="form"
+    [requiredFields]="['indiceFrecuencia.totalHorasTrabajadas', 'indiceFrecuencia.totalDiasTrabajadas', 'indiceFrecuencia.numerador', 'indiceGravedad.diasPerdidos', 'indiceGravedad.diasCargo', 'capacitacionesSeguridad.numerador', 'inspeccionesSeguridad.numerador', 'inspeccionesSeguridad.denominador', 'observacionesCSeguros.numerador', 'observacionesCSeguros.denominador', 'correcionConInseguras.numerador', 'correcionConInseguras.denominador', 'cumplimientoUsoEPP.numerador', 'cumplimientoUsoEPP.denominador']"
+    [fieldLabels]="{
+    'indiceFrecuencia.totalHorasTrabajadas': 'Total Horas Trabajadas',
+    'indiceFrecuencia.totalDiasTrabajadas': 'Dias Trabajados',
+    'indiceFrecuencia.numerador': 'Número de Lesiones',
+    'indiceGravedad.diasPerdidos': 'Días Perdidos',
+    'indiceGravedad.diasCargo': 'Días de Cargo',
+    'capacitacionesSeguridad.numerador': 'Trabajadores Capacitados',
+    'inspeccionesSeguridad.numerador': 'Inspecciones Realizadas',
+    'inspeccionesSeguridad.denominador': 'Inspecciones Planeadas',
+    'observacionesCSeguros.numerador': 'Comportamientos Seguros',
+    'observacionesCSeguros.denominador': 'Total Observaciones',
+    'correcionConInseguras.numerador': 'Condiciones Corregidas',
+    'correcionConInseguras.denominador': 'Condiciones Detectadas',
+    'cumplimientoUsoEPP.numerador': 'Uso Correcto EPP',
+    'cumplimientoUsoEPP.denominador': 'Total Observados'
+  }">
+  </app-form-field-counter>
+  <!-- Modal para selección de días de cargo -->
+  <ng-template #diasCargoModal>
+    <div class="modal-header bg-primary text-white">
+      <h5 class="modal-title">Días de Cargo</h5>
+      <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="modalRef.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+      <div class="table-responsive">
+        <table class="table table-hover table-striped">
+          <thead class="table-dark">
+            <tr>
+              <th>Naturaleza de la Lesión</th>
+              <th class="text-end">Jornadas</th>
+              <th class="text-center">Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of tablaDiasCargo" [class.table-active]="selectedNature === item.naturaleza">
+              <td data-label="Naturaleza">{{ item.naturaleza }}</td>
+              <td class="text-end" data-label="Jornadas">{{ item.jornadas | number }}</td>
+              <td class="text-center" data-label="Acción">
+                <button class="btn btn-sm btn-primary" (click)="selectDiasCargo(item.naturaleza, item.jornadas)">
+                  <i class="bi bi-check-lg"></i>
+                  <span class="d-none d-sm-inline">Seleccionar</span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-secondary" (click)="modalRef.dismiss()">
+        <i class="bi bi-x-lg"></i> Cerrar
+      </button>
+    </div>
+  </ng-template>
 </div>

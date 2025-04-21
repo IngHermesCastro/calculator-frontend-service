@@ -1,20 +1,164 @@
+/* footer.component.css */
 footer {
-    background-color: #003366;
-    color: white;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.9rem;
-    margin-top: auto; /* Asegura que el footer esté al final de la página */
-
+  background: linear-gradient(135deg, #002b4d 0%, #003366 100%);
+  color: white;
+  padding: 40px 0 20px;
+  font-size: 0.9rem;
+  margin-top: auto;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.2);
 }
 
-.footer-links ul, .social-links {
-    display: flex;
-    gap: 15px;
+footer.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-.footer-links a, .social-links a {
-    color: white;
-    text-decoration: none;
+/* Patrón de fondo sutil */
+footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+      radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.05) 0%, transparent 20%),
+      radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.05) 0%, transparent 20%);
+  z-index: 0;
+}
+
+/* Contenedor principal */
+footer .container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Títulos de sección */
+footer h5 {
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  position: relative;
+  display: inline-block;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+
+footer h5::after {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.3); /* Línea más discreta */
+  bottom: -8px;
+  left: 0;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+footer h5:hover::after {
+  width: 60px;
+}
+
+/* Efecto hover para enlaces */
+.footer-links a,
+.hover-accent,
+.text-white-50 {
+  position: relative;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.footer-links a:hover,
+.hover-accent:hover,
+.text-white-50:hover {
+  color: #66ccff !important;
+  transform: translateX(5px);
+}
+
+.footer-links a::before,
+.hover-accent::before {
+  content: '→';
+  position: absolute;
+  left: -15px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  color: #ffd700;
+}
+
+.footer-links a:hover::before,
+.hover-accent:hover::before {
+  opacity: 1;
+  left: -12px;
+}
+
+/* Iconos sociales mejorados */
+.social-icon {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.social-icon::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: all 0.6s ease;
+}
+
+.social-icon:hover {
+  transform: translateY(-5px) scale(1.1);
+  background: rgba(102, 204, 255, 0.2);
+  color: #66ccff !important;
+  box-shadow: 0 5px 15px rgba(102, 204, 255, 0.3);
+}
+
+.social-icon:hover::before {
+  left: 100%;
+}
+
+/* Línea divisoria más discreta */
+hr {
+  border: none;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1); /* Más sutil */
+  margin: 1.5rem 0;
+}
+
+/* Copyright con efecto de brillo */
+.text-white-50 {
+  transition: all 0.3s ease;
+}
+
+.text-white-50:hover {
+  color: #ffd700 !important;
+  text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  footer {
+      text-align: center;
+  }
+
+  footer h5::after {
+      left: 50%;
+      transform: translateX(-50%);
+  }
+
+  .social-links {
+      justify-content: center;
+  }
 }
