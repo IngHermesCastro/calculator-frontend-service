@@ -211,7 +211,7 @@
                   <div class="division-line"></div>
 
                   <!--Denominador-->
-                  <div class="denominator">
+                  <!-- <div class="denominator">
                     <div class="form-group position-relative">
                       <label for="igDenominador" [class.float-label]="shouldFloatLabel('indiceGravedad.denominador')">
                         HORAS TRABAJADAS
@@ -219,7 +219,57 @@
                       <input id="igDenominador" type="number" formControlName="denominador" placeholder=""
                         (focus)="onFocus('indiceGravedad.denominador')" (blur)="onBlur('indiceGravedad.denominador')">
                     </div>
+                  </div> -->
+
+                  <div class="demoniadorPrincipal">
+                    <div class="denominadorCampos">
+                      <!-- <div class="denominator"> -->
+                      <!-- TOTAL TRABAJADORES -->
+                      <div class="campoOne">
+                        <div class="form-group position-relative">
+                          <label for="ifDenominadorTotal"
+                            [class.float-label]="shouldFloatLabel('indiceGravedad.denominador_total')">
+                            TOTAL TRABAJADORES
+                          </label>
+                          <input id="ifDenominadorTotal" type="number" formControlName="denominador_total"
+                            placeholder="" (focus)="onFocus('indiceGravedad.denominador_total')"
+                            (blur)="onBlur('indiceGravedad.denominador_total')" [disabled]="true">
+                        </div>
+                      </div>
+
+                      <div class="multiply">x</div>
+
+
+                      <!-- HORAS TRABAJADAS -->
+                      <div class="campoTwo">
+                        <div class="form-group position-relative">
+                          <label class="label_2" for="ifDenominadorHoras"
+                            [class.float-label]="shouldFloatLabel('indiceGravedad.denominador_horas')">
+                            HORAS TRABAJADAS
+                          </label>
+                          <input id="ifDenominadorHoras" type="number" formControlName="denominador_horas"
+                            placeholder="" (focus)="onFocus('indiceGravedad.denominador_horas')"
+                            (blur)="onBlur('indiceGravedad.denominador_horas')" [disabled]="true">
+                        </div>
+                      </div>
+                      <div class="multiply">x</div>
+
+                      <!-- DÍAS TRABAJADOS -->
+                      <div class="campoThree">
+                        <div class="form-group position-relative">
+                          <label class="label_3" for="ifDenominadorDias"
+                            [class.float-label]="shouldFloatLabel('indiceGravedad.denominador_dias')">
+                            DÍAS TRABAJADOS
+                          </label>
+                          <input id="ifDenominadorDias" type="number" formControlName="denominador_dias" placeholder=""
+                            (focus)="onFocus('indiceGravedad.denominador_dias')"
+                            (blur)="onBlur('indiceGravedad.denominador_dias')" min="1">
+                        </div>
+                      </div>
+                      <!-- </div> -->
+                    </div>
                   </div>
+
                 </div>
                 <div class="result">=</div>
                 <div class="result-value-p">
@@ -490,24 +540,24 @@
     </div>
   </div>
   <app-form-field-counter [form]="form"
-    [requiredFields]="['indiceFrecuencia.totalHorasTrabajadas', 'indiceFrecuencia.totalDiasTrabajadas', 'indiceFrecuencia.numerador', 'indiceGravedad.diasPerdidos', 'indiceGravedad.diasCargo', 'capacitacionesSeguridad.numerador', 'inspeccionesSeguridad.numerador', 'inspeccionesSeguridad.denominador', 'observacionesCSeguros.numerador', 'observacionesCSeguros.denominador', 'correcionConInseguras.numerador', 'correcionConInseguras.denominador', 'cumplimientoUsoEPP.numerador', 'cumplimientoUsoEPP.denominador']"
-    [fieldLabels]="{
-    'indiceFrecuencia.totalHorasTrabajadas': 'Total Horas Trabajadas',
-    'indiceFrecuencia.totalDiasTrabajadas': 'Dias Trabajados',
-    'indiceFrecuencia.numerador': 'Número de Lesiones',
-    'indiceGravedad.diasPerdidos': 'Días Perdidos',
-    'indiceGravedad.diasCargo': 'Días de Cargo',
-    'capacitacionesSeguridad.numerador': 'Trabajadores Capacitados',
-    'inspeccionesSeguridad.numerador': 'Inspecciones Realizadas',
-    'inspeccionesSeguridad.denominador': 'Inspecciones Planeadas',
-    'observacionesCSeguros.numerador': 'Comportamientos Seguros',
-    'observacionesCSeguros.denominador': 'Total Observaciones',
-    'correcionConInseguras.numerador': 'Condiciones Corregidas',
-    'correcionConInseguras.denominador': 'Condiciones Detectadas',
-    'cumplimientoUsoEPP.numerador': 'Uso Correcto EPP',
-    'cumplimientoUsoEPP.denominador': 'Total Observados'
-  }">
-  </app-form-field-counter>
+  [requiredFields]="['indiceFrecuencia.totalHorasTrabajadas', 'indiceFrecuencia.totalDiasTrabajadas', 'indiceFrecuencia.numerador', 'indiceGravedad.diasPerdidos', 'indiceGravedad.diasCargo', 'capacitacionesSeguridad.numerador', 'inspeccionesSeguridad.numerador', 'inspeccionesSeguridad.denominador', 'observacionesCSeguros.numerador', 'observacionesCSeguros.denominador', 'correcionConInseguras.numerador', 'correcionConInseguras.denominador', 'cumplimientoUsoEPP.numerador', 'cumplimientoUsoEPP.denominador']"
+  [fieldLabels]="{
+  'indiceFrecuencia.totalHorasTrabajadas': 'Total Horas Trabajadas',
+  'indiceFrecuencia.totalDiasTrabajadas': 'Dias Trabajados',
+  'indiceFrecuencia.numerador': 'Número de Lesiones',
+  'indiceGravedad.diasPerdidos': 'Días Perdidos',
+  'indiceGravedad.diasCargo': 'Días de Cargo',
+  'capacitacionesSeguridad.numerador': 'Trabajadores Capacitados',
+  'inspeccionesSeguridad.numerador': 'Inspecciones Realizadas',
+  'inspeccionesSeguridad.denominador': 'Inspecciones Planeadas',
+  'observacionesCSeguros.numerador': 'Comportamientos Seguros',
+  'observacionesCSeguros.denominador': 'Total Observaciones',
+  'correcionConInseguras.numerador': 'Condiciones Corregidas',
+  'correcionConInseguras.denominador': 'Condiciones Detectadas',
+  'cumplimientoUsoEPP.numerador': 'Uso Correcto EPP',
+  'cumplimientoUsoEPP.denominador': 'Total Observados'
+}">
+</app-form-field-counter>
   <!-- Modal para selección de días de cargo -->
   <ng-template #diasCargoModal>
     <div class="modal-header bg-primary text-white">

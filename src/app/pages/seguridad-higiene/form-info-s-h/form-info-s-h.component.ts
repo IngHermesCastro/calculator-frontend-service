@@ -39,7 +39,7 @@ export class FormInfoSHComponent implements OnInit {
       provincia: ['', Validators.required],
       ciudad: ['', Validators.required],
       tipoInstitucion: [{ value: '', disabled: true }],
-      comiteParitario: ['', Validators.required],
+      comiteParitario: [{value: '', disabled: true }],
       monitorSeguridad: [{ value: '', disabled: true }],
       numeroTrabajadores: [{ value: '', disabled: true }],
       nivelDeRiesgo: [{ value: '', disabled: true }],
@@ -113,10 +113,10 @@ export class FormInfoSHComponent implements OnInit {
     this._formSvc.obtenerTodasLasActividades().subscribe({
       next: (actividades) => {
         this.todasLasActividades = actividades;
-        console.log('Actividades cargadas:', this.todasLasActividades);
+        //console.log('Actividades cargadas:', this.todasLasActividades);
       },
       error: (error) => {
-        console.error('Error al cargar actividades:', error);
+        //console.error('Error al cargar actividades:', error);
       }
     });
 
@@ -124,10 +124,10 @@ export class FormInfoSHComponent implements OnInit {
     this._formSvc.obtenerTodasLasProvincias().subscribe({
       next: (provincias) => {
         this.provincias = provincias;
-        console.log('Provincias cargadas:', this.provincias);
+        //console.log('Provincias cargadas:', this.provincias);
       },
       error: (error) => {
-        console.error('Error al cargar provincias:', error);
+        //console.error('Error al cargar provincias:', error);
       }
     });
 

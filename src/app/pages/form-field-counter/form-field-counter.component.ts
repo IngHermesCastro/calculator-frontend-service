@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
@@ -16,6 +16,7 @@ export class FormFieldCounterComponent implements OnInit, OnDestroy {
   @Input() requiredFields: string[] = [];
   @Input() fieldLabels: Record<string, string> = {}; // { 'campo.técnico': 'Label amigable' }
 
+
   getFieldLabel(fieldName: string): string {
     return this.fieldLabels[fieldName] || fieldName;
   }
@@ -31,6 +32,8 @@ export class FormFieldCounterComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // Inicializar contadores
     this.updatePendingFields();
+    this.onWindowScroll();
+
 
     // Suscribirse a cambios en el formulario
     this.formSubscription = this.form.valueChanges.subscribe(() => {
@@ -44,7 +47,23 @@ export class FormFieldCounterComponent implements OnInit, OnDestroy {
       }
     });
   }
+  @HostListener('window:scroll', ['$event'])
+  onWindowScroll() {
+    const counterContainer = document.querySelector('.counter-container') as HTMLElement;
+    if (counterContainer) {
+      // Calcula una posición que sea relativa al scroll
+      // Esto mantiene el componente visible pero permite que se mueva con el scroll
+      const scrollY = window.scrollY || window.pageYOffset;
+      const viewportHeight = window.innerHeight;
 
+      // Esto hará que el componente se mantenga a 20px del borde superior visible
+      // mientras se hace scroll
+      counterContainer.style.top = `${scrollY + 20}px`;
+
+      // Opcionalmente, puedes agregar lógica para que se mantenga visible
+      // en todo momento sin salirse de la pantalla
+    }
+  }
   ngOnDestroy() {
     if (this.formSubscription) {
       this.formSubscription.unsubscribe();

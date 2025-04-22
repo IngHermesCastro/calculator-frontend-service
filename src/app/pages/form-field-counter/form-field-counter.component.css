@@ -1,15 +1,15 @@
 /* form-field-counter.component.css */
 .counter-container {
-  position: fixed;
-  /* bottom: 24px; */
-  /* bottom: 24px;
-  right: 24px; */
-  top: 10%;
-  right: 20px;
+  position: fixed; /* Cambiamos de sticky a fixed */
   z-index: 1050;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  top: 20px; /* Posicionamiento desde la parte superior */
+  right: 20px; /* Posicionamiento desde la derecha */
+  width: fit-content;
+  /* Eliminamos los margins que estaban causando problemas */
+
 }
 
 .details-panel {
@@ -21,6 +21,9 @@
   width: 280px;
   border: 1px solid #dee2e6;
   animation: fadeIn 0.3s ease;
+  margin-bottom: -13rem;
+  max-height: 60vh; /* Limita la altura máxima */
+  overflow-y: auto;
 }
 
 .details-title {
@@ -81,6 +84,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   transition: all 0.3s ease;
+  margin-top: 13rem;
 }
 
 .counter-button:hover {
@@ -152,20 +156,56 @@
   }
 }
 
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #6c757d;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 10px;
+  transition: color 0.2s ease;
+}
+
+.close-button:hover {
+  color: #dc3545;
+}
+
+/* Ajusta el margen inferior del título para mantener el espaciado */
+.details-title {
+  margin-bottom: 0; /* Elimina el margen inferior original */
+}
+
+
 /* Adaptaciones para móvil */
+/* Mantén tu media query existente y actualiza las propiedades */
 @media (max-width: 768px) {
   .counter-container {
-    bottom: 16px;
-    right: 16px;
+    /* Ya no necesitamos bottom/right como estaban antes */
+    top: 12px; /* Reducimos un poco el espacio desde arriba en móviles */
+    right: 12px; /* Menor margen en pantallas pequeñas */
+    margin-left: auto;
   }
 
   .details-panel {
     width: 240px;
     padding: 12px;
+    margin-left: -13rem;
+    margin-bottom: -13rem;
+    max-height: 50vh;
   }
 
   .counter-button {
     padding: 8px 12px;
+    margin-left: -9rem;
+    margin-top: 10rem;
   }
 
   .counter-number {
@@ -174,5 +214,36 @@
 
   .counter-text {
     font-size: 0.8rem;
+  }
+  .close-button {
+    font-size: 1.1rem;
+  }
+}
+
+/* Añadimos un breakpoint adicional para pantallas muy pequeñas */
+@media (max-width: 480px) {
+  .counter-container {
+    top: 8px;
+    right: 8px;
+  }
+
+  .details-panel {
+    width: 200px;
+    padding: 10px;
+  }
+
+  .counter-button {
+    padding: 6px 10px;
+  }
+
+  .counter-number {
+    font-size: 1rem;
+  }
+
+  .counter-text {
+    font-size: 0.7rem;
+  }
+  .close-button {
+    font-size: 1rem;
   }
 }

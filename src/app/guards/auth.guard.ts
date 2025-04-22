@@ -9,19 +9,19 @@ export const authGuard: CanActivateFn = (route, state) => {
 
   // Verificar si los datos del formulario están completos
   const formInfoData = formService.getFormInfoData();
-  //  const formIndicadoresData = formService.getForm2();
+    // const formIndicadoresData = formService.getForm2();
 
   // Si el usuario intenta acceder al formulario de indicadores sin completar el de información
-  // if (state.url.includes('form-indicadores-s-h') && !formInfoData) {
-  //   router.navigate(['/seguridad-higiene/form-info-s-h']);
-  //   return false; // Bloquear acceso
-  // }
+   if (state.url.includes('form-indicadores-s-h') && !formInfoData) {
+     router.navigate(['/seguridad-higiene/form-info-s-h']);
+     return false; // Bloquear acceso
+   }
 
   // Si el usuario intenta acceder al PDF sin completar los indicadores
-  //  if (state.url.includes('form-pdf') && !formIndicadoresData) {
-  //    router.navigate(['/seguridad-higiene/form-indicadores-s-h']);
-  //    return false; // Bloquear acceso
-  //  }
+    // if (state.url.includes('form-pdf') && !formIndicadoresData) {
+    //   router.navigate(['/seguridad-higiene/form-indicadores-s-h']);
+    //   return false; // Bloquear acceso
+    // }
 
   return true; // Permitir acceso
 };

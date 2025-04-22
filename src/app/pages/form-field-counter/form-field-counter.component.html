@@ -2,7 +2,12 @@
 <div class="counter-container">
   <!-- Panel de detalles (visible cuando showDetails es true) -->
   <div *ngIf="showDetails" class="details-panel">
+    <div class="panel-header">
     <h4 class="details-title">Estado del formulario</h4>
+    <button class="close-button" (click)="toggleDetails()">
+      <i class="bi bi-x"></i>
+    </button>
+    </div>
 
     <ng-container *ngIf="completedFields.length > 0">
       <p class="field-category">Campos completados:</p>
