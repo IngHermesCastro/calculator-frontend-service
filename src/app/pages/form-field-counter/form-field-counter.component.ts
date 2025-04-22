@@ -15,7 +15,7 @@ export class FormFieldCounterComponent implements OnInit, OnDestroy {
   @Input() form!: FormGroup;
   @Input() requiredFields: string[] = [];
   @Input() fieldLabels: Record<string, string> = {}; // { 'campo.técnico': 'Label amigable' }
-
+  @Input() zeroValueValidFields: string[] = [];
 
   getFieldLabel(fieldName: string): string {
     return this.fieldLabels[fieldName] || fieldName;
@@ -74,13 +74,20 @@ export class FormFieldCounterComponent implements OnInit, OnDestroy {
     this.completedFields = [];
     this.remainingFields = [];
 
-    // Revisar cada campo requerido
     this.requiredFields.forEach((fieldName) => {
       const control = this.form.get(fieldName);
 
-      // Verificar si el campo está completo y es válido
-      if (control && control.valid && control.value) {
-        this.completedFields.push(fieldName);
+      if (control && control.valid) {
+        // Verifica si el campo permite cero como valor válido
+        const isZeroValidField = this.zeroValueValidFields.includes(fieldName);
+        const isZeroValue = control.value === 0 || control.value === '0';
+
+        if ((isZeroValidField && isZeroValue) ||
+            (!isZeroValidField && control.value !== null && control.value !== undefined && control.value !== '')) {
+          this.completedFields.push(fieldName);
+        } else {
+          this.remainingFields.push(fieldName);
+        }
       } else {
         this.remainingFields.push(fieldName);
       }

@@ -60,7 +60,8 @@
                     [inputFormatter]="formatearActividad" [resultFormatter]="formatearActividad"
                     (selectItem)="seleccionarActividad($event)"
                     [class.is-invalid]="form.get('actividadEconomica')?.touched && !actividadSeleccionada"
-                    placeholder="Buscar actividad económica" (focus)="onFocusActividadEconomica()"
+                    placeholder="Buscar actividad económica"
+                    (focus)="onFocusActividadEconomica()"
                     (blur)="onBlur('actividadEconomica')">
                   <div class="invalid-feedback"
                     *ngIf="form.get('actividadEconomica')?.touched && !actividadSeleccionada">
@@ -89,7 +90,7 @@
                         <i class="bi bi-person-standing-dress"></i> MUJERES
                       </label>
                       <input type="number" id="cantidadMujeres" class="form-control rounded-pill"
-                        formControlName="cantidadMujeres" placeholder="0" min="0" (focus)="onFocus('cantidadMujeres')"
+                        formControlName="cantidadMujeres" placeholder="" min="0" (focus)="onFocus('cantidadMujeres')"
                         (blur)="onBlur('cantidadMujeres')">
                       <div class="invalid-feedback"
                         *ngIf="form.get('cantidadMujeres')?.touched && form.get('cantidadMujeres')?.errors?.['min']">

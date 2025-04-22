@@ -1,14 +1,11 @@
 import { Component, OnInit, TemplateRef, ViewChild, inject, ViewEncapsulation, Input } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RiesgosService } from 'src/app/core/services/form.service';
 import { CommonModule } from '@angular/common';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { FormFieldCounterComponent } from "../../form-field-counter/form-field-counter.component";
 
-
-// Aqui vamos a empezar los cambios
-// ok
 
 @Component({
   selector: 'app-form-indicadores-s-h',
@@ -114,7 +111,7 @@ export class FormIndicadoresSHComponent implements OnInit {
       indiceGravedad: this.fb.group({
         // numerador: [, [Validators.required, Validators.min(0)]],
         diasPerdidos: [, [Validators.required, Validators.min(1)]],
-        diasCargo: [, [Validators.required, Validators.min(1)]],
+        diasCargo:  [, [Validators.required, Validators.min(0)]],
         denominador_horas: [, [Validators.required, Validators.min(1)]], // Asegúrate de incluir este campo
         denominador_dias: [, [Validators.required, Validators.min(1)]],
         denominador_total: [{ value: '', disabled: true }],
@@ -129,30 +126,31 @@ export class FormIndicadoresSHComponent implements OnInit {
         mensaje: [''], // Agregar campo para el mensaje
       }),
       capacitacionesSeguridad: this.fb.group({
-        numerador: [, [Validators.min(0), Validators.required]],
+        // numerador: [, [Validators.min(0), Validators.required]],
+        numerador: [, [Validators.min(0)]],
         denominador: [, [Validators.min(1)]],
         resultado: ['ND'],
-      }),
+      }, { validators: this.denominatorGreaterThanNumerator }),
       inspeccionesSeguridad: this.fb.group({
-        numerador: [, [Validators.min(0), Validators.required]],
-        denominador: [, [Validators.min(1), Validators.required]],
+        numerador: [, [Validators.min(0)]],
+        denominador: [, [Validators.min(1)]],
         resultado: ['ND'],
-      }),
+      }, { validators: this.denominatorGreaterThanNumerator }),
       observacionesCSeguros: this.fb.group({
-        numerador: [, [Validators.min(0), Validators.required]],
-        denominador: [, [Validators.min(1), Validators.required]],
+        numerador: [, [Validators.min(0)]],
+        denominador: [, [Validators.min(1)]],
         resultado: ['ND'],
-      }),
+      }, { validators: this.denominatorGreaterThanNumerator }),
       correcionConInseguras: this.fb.group({
-        numerador: [, [Validators.min(0), Validators.required]],
-        denominador: [, [Validators.min(1), Validators.required]],
+        numerador: [, [Validators.min(0)]],
+        denominador: [, [Validators.min(1)]],
         resultado: ['ND'],
-      }),
+      }, { validators: this.denominatorGreaterThanNumerator }),
       cumplimientoUsoEPP: this.fb.group({
-        numerador: [, [Validators.min(0), Validators.required]],
-        denominador: [, [Validators.min(1), Validators.required]],
+        numerador: [, [Validators.min(0)]],
+        denominador: [, [Validators.min(1)]],
         resultado: ['ND'],
-      }),
+      }, { validators: this.denominatorGreaterThanNumerator }),
     });
   }
   // Método para abrir el modal
@@ -295,12 +293,27 @@ export class FormIndicadoresSHComponent implements OnInit {
             } de trabajo.`
           : 'No se han registrado días perdidos.';
       default:
-        return `Resultado calculado: ${proyeccion}`;
+        return `Resultado calculado: ${proyeccion}%`;
     }
   }
 
   calcularResultado(indicador: string) {
     const controls = this.form.get(indicador) as FormGroup;
+
+    const isProactive = [
+      'capacitacionesSeguridad',
+      'inspeccionesSeguridad',
+      'observacionesCSeguros',
+      'correcionConInseguras',
+      'cumplimientoUsoEPP'
+    ].includes(indicador);
+
+    if (isProactive && controls.invalid) {
+      const errorMessage = 'El denominador no puede ser menor que el numerador';
+      controls.patchValue({ resultado: 'Error' }, { emitEvent: false });
+      this.mensaje[indicador] = errorMessage;
+      return;
+    }
     if (controls) {
       let numerador = controls.get('numerador')?.value || 0;
       let denominador = controls.get('denominador')?.value || 1;
@@ -362,6 +375,15 @@ export class FormIndicadoresSHComponent implements OnInit {
       }
     }
   }
+  private denominatorGreaterThanNumerator(group: FormGroup): ValidationErrors | null {
+    const numerador = group.get('numerador')?.value;
+    const denominador = group.get('denominador')?.value;
+
+    if (numerador !== null && denominador !== null && denominador < numerador) {
+      return { denominatorSmaller: true };
+    }
+    return null;
+  }
 
   // Función para manejar el enfoque de los inputs
   onFocus(fieldName: string) {
@@ -375,7 +397,8 @@ export class FormIndicadoresSHComponent implements OnInit {
 
   // Función para verificar si el label debe flotar
   shouldFloatLabel(fieldName: string): boolean {
-    return !!this.form.get(fieldName)?.value || !!this.focusedFields[fieldName];
+    const value = this.form.get(fieldName)?.value;
+    return value !== null && value !== undefined && value !== '' || !!this.focusedFields[fieldName];
   }
   get nombreEmpresa() {
     return this.form.get('nombreEmpresa')?.value?.toUpperCase() || '';

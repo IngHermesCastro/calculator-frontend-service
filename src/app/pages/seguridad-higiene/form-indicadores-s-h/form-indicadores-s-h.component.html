@@ -365,7 +365,15 @@
                 </div>
 
               </div>
+              <div class="indicator-group__mensaje">
+                <p class="mensaje-texto" *ngIf="form.get('capacitacionesSeguridad')?.hasError('denominatorSmaller')" style="color: red;">
+                  Error: El denominador no puede ser menor que el numerador
+                </p>
+                <p class="mensaje-texto">{{ mensaje['capacitacionesSeguridad'] }}</p>
+              </div>
+
             </div>
+
 
             <div class="indicator-group" formGroupName="inspeccionesSeguridad">
               <div class="indicator-label">Inspecciones de Seguridad</div>
@@ -403,6 +411,12 @@
                 <div class="result-value-p">
                   <div class="result-value">{{form.get('inspeccionesSeguridad')?.get('resultado')?.value || 0}}%</div>
                 </div>
+              </div>
+              <div class="indicator-group__mensaje">
+                <p class="mensaje-texto" *ngIf="form.get('inspeccionesSeguridad')?.hasError('denominatorSmaller')" style="color: red;">
+                  Error: El denominador no puede ser menor que el numerador
+                </p>
+                <p class="mensaje-texto">{{ mensaje['inspeccionesSeguridad'] }}</p>
               </div>
             </div>
 
@@ -443,6 +457,12 @@
                   <div class="result-value">{{form.get('observacionesCSeguros')?.get('resultado')?.value || 0}}%</div>
                 </div>
               </div>
+              <div class="indicator-group__mensaje">
+                <p class="mensaje-texto" *ngIf="form.get('observacionesCSeguros')?.hasError('denominatorSmaller')" style="color: red;">
+                  Error: El denominador no puede ser menor que el numerador
+                </p>
+                <p class="mensaje-texto">{{ mensaje['observacionesCSeguros'] }}</p>
+              </div>
             </div>
 
             <div class="indicator-group" formGroupName="correcionConInseguras">
@@ -482,6 +502,12 @@
                   <div class="result-value">{{form.get('correcionConInseguras')?.get('resultado')?.value || 0}}%</div>
                 </div>
               </div>
+              <div class="indicator-group__mensaje">
+                <p class="mensaje-texto" *ngIf="form.get('correcionConInseguras')?.hasError('denominatorSmaller')" style="color: red;">
+                  Error: El denominador no puede ser menor que el numerador
+                </p>
+                <p class="mensaje-texto">{{ mensaje['correcionConInseguras'] }}</p>
+              </div>
             </div>
 
             <!-- Cumplimiento del Uso de EPP -->
@@ -520,6 +546,12 @@
                 <div class="result-value-p">
                   <div class="result-value">{{form.get('cumplimientoUsoEPP')?.get('resultado')?.value || 0}}%</div>
                 </div>
+              </div>
+              <div class="indicator-group__mensaje">
+                <p class="mensaje-texto" *ngIf="form.get('cumplimientoUsoEPP')?.hasError('denominatorSmaller')" style="color: red;">
+                  Error: El denominador no puede ser menor que el numerador
+                </p>
+                <p class="mensaje-texto">{{ mensaje['cumplimientoUsoEPP'] }}</p>
               </div>
             </div>
           </div>

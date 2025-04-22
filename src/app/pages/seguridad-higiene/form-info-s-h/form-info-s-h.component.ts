@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RiesgosService } from 'src/app/core/services/form.service';
-import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, of, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
+import { NgbTypeaheadModule, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
+import { Observable, of, Subject, merge } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, startWith, filter } from 'rxjs/operators';
 import { Riesgo } from 'src/app/core/interfaces/riesgos';
 import { Provincia } from 'src/app/core/interfaces/provincias';
 import { FormFieldCounterComponent } from "../../form-field-counter/form-field-counter.component";
@@ -25,16 +25,20 @@ export class FormInfoSHComponent implements OnInit {
   provincias: Provincia[] = [];
   ciudades: { id: string; name: string; }[] = [];
   private readonly _formSvc = inject(RiesgosService);
-  // Agregar un Subject para controlar cuándo mostrar el menú
+
+  // Subject para el foco y click
   focus$ = new Subject<string>();
+  click$ = new Subject<string>();
+
+  @ViewChild('actividadInstance', { static: false }) actividadInstance!: NgbTypeahead;
 
   constructor(private fb: FormBuilder, private router: Router) {
     this.form = this.fb.group({
       nombreEmpresa: ['', Validators.required],
       correoElectronico: ['', [Validators.required, Validators.email]],
       actividadEconomica: ['', [Validators.required]],
-      cantidadHombres: [0, [Validators.required, Validators.min(0)]],
-      cantidadMujeres: [0, [Validators.required, Validators.min(0)]],
+      cantidadHombres: [, [Validators.required, Validators.min(0)]],
+      cantidadMujeres: [, [Validators.required, Validators.min(0)]],
       empresaTipo: ['', Validators.required],
       provincia: ['', Validators.required],
       ciudad: ['', Validators.required],
@@ -52,71 +56,64 @@ export class FormInfoSHComponent implements OnInit {
   ngOnInit() {
     /**Cambios Para Guardar los datos Temporal* */
     // Cargar datos guardados si existen
-  const savedFormData = this._formSvc.getFormInfoData();
-  if (savedFormData) {
-    this.form.patchValue(savedFormData);
-    // Primero establecemos todos los valores excepto ciudad
-    const { ciudad, ...otherFormValues } = savedFormData;
-    this.form.patchValue(otherFormValues);
-    // Si hay una provincia guardada, cargamos sus ciudades primero
-    if (savedFormData.provincia) {
-      // Cargar provincias y luego establecer la ciudad
-      this._formSvc.obtenerTodasLasProvincias().subscribe({
-        next: (provincias) => {
-          this.provincias = provincias;
-          // Encontrar la provincia seleccionada
-          const provincia = this.provincias.find(p => p.name === savedFormData.provincia);
-          if (provincia) {
-            // Cargar las ciudades de la provincia
-            this.ciudades = provincia.cities;
-
-            // Ahora podemos establecer el valor de la ciudad guardada
-
+    const savedFormData = this._formSvc.getFormInfoData();
+    if (savedFormData) {
+      this.form.patchValue(savedFormData);
+      // Primero establecemos todos los valores excepto ciudad
+      const { ciudad, ...otherFormValues } = savedFormData;
+      this.form.patchValue(otherFormValues);
+      // Si hay una provincia guardada, cargamos sus ciudades primero
+      if (savedFormData.provincia) {
+        // Cargar provincias y luego establecer la ciudad
+        this._formSvc.obtenerTodasLasProvincias().subscribe({
+          next: (provincias) => {
+            this.provincias = provincias;
+            // Encontrar la provincia seleccionada
+            const provincia = this.provincias.find(p => p.name === savedFormData.provincia);
+            if (provincia) {
+              // Cargar las ciudades de la provincia
+              this.ciudades = provincia.cities;
+            }
           }
-        }
-      });
-    }
+        });
+      }
 
-    // Si hay una actividad económica guardada, buscarla y seleccionarla
-    if (savedFormData.actividadEconomica) {
-      // Cargar la actividad guardada cuando los datos estén disponibles
-      this._formSvc.obtenerTodasLasActividades().subscribe({
-        next: (actividades) => {
-          this.todasLasActividades = actividades;
+      // Si hay una actividad económica guardada, buscarla y seleccionarla
+      if (savedFormData.actividadEconomica) {
+        // Cargar la actividad guardada cuando los datos estén disponibles
+        this._formSvc.obtenerTodasLasActividades().subscribe({
+          next: (actividades) => {
+            this.todasLasActividades = actividades;
 
-          // Buscar la actividad por descripción
-          const actividadEncontrada = actividades.find(a =>
-            a.descripcion === savedFormData.actividadEconomica ||
-            (savedFormData.actividadEconomica.descripcion &&
-             a.descripcion === savedFormData.actividadEconomica.descripcion));
+            // Buscar la actividad por descripción
+            const actividadEncontrada = actividades.find(a =>
+              a.descripcion === savedFormData.actividadEconomica ||
+              (savedFormData.actividadEconomica.descripcion &&
+               a.descripcion === savedFormData.actividadEconomica.descripcion));
 
-          if (actividadEncontrada) {
-            this.actividadSeleccionada = actividadEncontrada;
-            // Actualizar el formulario con la actividad encontrada
-            this.form.patchValue({
-              actividadEconomica: actividadEncontrada
-            });
+            if (actividadEncontrada) {
+              this.actividadSeleccionada = actividadEncontrada;
+              // Actualizar el formulario con la actividad encontrada
+              this.form.patchValue({
+                actividadEconomica: actividadEncontrada
+              });
+            }
           }
-        }
-      });
-    }
+        });
+      }
 
-    // Actualizar campos calculados después de cargar datos
-    setTimeout(() => this.actualizarCamposCalculados(), 100);
-  }
+      // Actualizar campos calculados después de cargar datos
+      setTimeout(() => this.actualizarCamposCalculados(), 100);
+    }
     /**Hasta aqui los cambios para Guardar Informacion* */
-
-
-
 
     // Cargar actividades
     this._formSvc.obtenerTodasLasActividades().subscribe({
       next: (actividades) => {
         this.todasLasActividades = actividades;
-        //console.log('Actividades cargadas:', this.todasLasActividades);
       },
       error: (error) => {
-        //console.error('Error al cargar actividades:', error);
+        console.error('Error al cargar actividades:', error);
       }
     });
 
@@ -124,10 +121,9 @@ export class FormInfoSHComponent implements OnInit {
     this._formSvc.obtenerTodasLasProvincias().subscribe({
       next: (provincias) => {
         this.provincias = provincias;
-        //console.log('Provincias cargadas:', this.provincias);
       },
       error: (error) => {
-        //console.error('Error al cargar provincias:', error);
+        console.error('Error al cargar provincias:', error);
       }
     });
 
@@ -159,10 +155,7 @@ export class FormInfoSHComponent implements OnInit {
         this.actualizarCamposCalculados();
       }
     });
-
-
   }
-
 
   actualizarCamposCalculados() {
     const formValue = this.form.getRawValue();
@@ -172,10 +165,6 @@ export class FormInfoSHComponent implements OnInit {
 
     // Enviar el valor al servicio
     this._formSvc.setTotalTrabajadores(totalTrabajadores);
-
-
-
-
 
     const rangoTrabajadores = this._formSvc.determinarRangoTrabajadores(totalTrabajadores);
     const tipoInstitucion = this._formSvc.setTipoEmpresa(totalTrabajadores);
@@ -199,27 +188,32 @@ export class FormInfoSHComponent implements OnInit {
     });
   }
 
- // Modifica el método buscarActividad
-buscarActividad = (text$: Observable<string>) =>
-  text$.pipe(
-    startWith(''),
-    debounceTime(200),
-    distinctUntilChanged(),
-    map(term => {
-      // Si es el foco inicial y no hay término de búsqueda, mostramos las primeras 10 actividades
-      if (this.mostrarDropdownInicial && term === '') {
-        this.mostrarDropdownInicial = false;
-        return this.todasLasActividades.slice(0, 10);
-      }
+  // Método mejorado para buscar actividades que muestra las primeras 10 al hacer foco
+  buscarActividad = (text$: Observable<string>) => {
+    const debouncedText$ = text$.pipe(
+      debounceTime(200),
+      distinctUntilChanged()
+    );
 
-      // Búsqueda normal
-      return term === ''
-        ? [] // No mostramos nada si el término está vacío (excepto en el foco inicial)
-        : this.todasLasActividades.filter(actividad =>
-            `${actividad.id} ${actividad.descripcion}`.toLowerCase().includes(term.toLowerCase())
-          ).slice(0, 10);
-    })
-  );
+    // Mezclamos el stream de eventos de foco/click con el texto para mostrar opciones inmediatamente
+    const clicksWithFocus$ = merge(
+      this.focus$.pipe(map(() => '')),
+      this.click$.pipe(map(() => ''))
+    );
+
+    return merge(debouncedText$, clicksWithFocus$).pipe(
+      map(term => {
+        // Siempre mostrar 10 elementos al hacer foco/click o al buscar
+        return term === ''
+          ? this.todasLasActividades
+          //? this.todasLasActividades.slice(0, 620)// Muestra las primeras 10 al hacer foco o click
+          : this.todasLasActividades.filter(actividad =>
+              `${actividad.id} ${actividad.descripcion}`.toLowerCase().includes(term.toLowerCase())
+            ).slice(0, 10);
+      })
+    );
+  };
+
   formatearActividad = (actividad: Riesgo | null) => {
     if (actividad && actividad.id && actividad.descripcion) {
       return `${actividad.id} ${actividad.descripcion}`;
@@ -228,21 +222,30 @@ buscarActividad = (text$: Observable<string>) =>
     }
   };
 
- seleccionarActividad(event: { item: Riesgo, preventDefault: Function }) {
-  const actividad = event.item;
-  if (actividad && actividad.descripcion) {
-    this.actividadSeleccionada = actividad;
-    const valorFormateado = this.formatearActividad(actividad);
-    this.actividadSeleccionadaPrevia = valorFormateado;
-    this.form.patchValue({
-      actividadEconomica: valorFormateado
-    });
-    this.actualizarCamposCalculados();
-    this.mostrarDropdownInicial = false; // Evitamos que se muestre de nuevo al volver a enfocar
-  } else {
-    console.error('Actividad no seleccionada correctamente o no tiene descripción:', event);
+  seleccionarActividad(event: { item: Riesgo, preventDefault: Function }) {
+    const actividad = event.item;
+    if (actividad && actividad.descripcion) {
+      this.actividadSeleccionada = actividad;
+      const valorFormateado = this.formatearActividad(actividad);
+      this.form.patchValue({
+        actividadEconomica: valorFormateado
+      });
+      this.actualizarCamposCalculados();
+    } else {
+      console.error('Actividad no seleccionada correctamente o no tiene descripción:', event);
+    }
   }
-}
+
+  // Método para ejecutar cuando se hace clic en el campo
+  onClickActividad() {
+    this.click$.next('');
+  }
+
+  // Método para ejecutar cuando se enfoca el campo
+  onFocusActividadEconomica() {
+    this.onFocus('actividadEconomica');
+    this.focus$.next('');
+  }
 
   regresar() {
     this.router.navigate(['/seguridad-higiene']);
@@ -254,7 +257,7 @@ buscarActividad = (text$: Observable<string>) =>
       const dataToSave = {
         ...formValue,
         actividadEconomica: this.actividadSeleccionada,
-        ciudad: formValue.ciudad.name ? formValue.ciudad.name : formValue.ciudad //Obetener la Ciudad Guardada
+        ciudad: formValue.ciudad.name ? formValue.ciudad.name : formValue.ciudad
       };
 
       // Guardar datos para recuperarlos si volvemos a este componente
@@ -264,59 +267,32 @@ buscarActividad = (text$: Observable<string>) =>
       this._formSvc.setForm1({
         ...formValue,
         actividadEconomica: this.actividadSeleccionada.descripcion,
-        ciudad: formValue.ciudad.name ? formValue.ciudad.name : formValue.ciudad //Obetener la Ciudad Guardada
+        ciudad: formValue.ciudad.name ? formValue.ciudad.name : formValue.ciudad
       });
       this.actualizarCamposCalculados();
       this._formSvc.form.patchValue(this.form.value);
       this.router.navigate(['/seguridad-higiene/form-indicadores-s-h']);
     }
-    /**Cambios Temprales Para Guadar los Datos de Forma Temporal* */
-
   }
-// Método para mostrar las actividades al hacer clic
-showDropdown = false;
-private actividadSeleccionadaPrevia: string = '';
-private mostrarDropdownInicial: boolean = true;
-mostrarActividades(event: any) {
-  event.preventDefault();
-  this.showDropdown = true;
-  // Disparamos un evento de búsqueda vacía para mostrar todas las opciones
-  this.focus$.next('');
-}
-// Método para manejar el foco en el campo de actividad económica
-onFocusActividadEconomica() {
-  this.onFocus('actividadEconomica');
-
-  // Solo mostramos el dropdown inicial si no hay una actividad seleccionada
-  // o si el valor actual es diferente al previamente seleccionado
-  const valorActual = this.form.get('actividadEconomica')?.value;
-  if (!this.actividadSeleccionada || valorActual !== this.actividadSeleccionadaPrevia) {
-    this.mostrarDropdownInicial = true;
-    this.focus$.next('');
-  }
-}
 
   /**PARA LA VALIDACION EN TIME REALTIME */
-// Función para manejar el enfoque de los inputs
-onFocus(fieldName: string) {
-  this.focusedFields[fieldName] = true;
-}
-
-// Función para manejar el desenfoque de los inputs
-onBlur(fieldName: string) {
-  this.focusedFields[fieldName] = false;
-  if (fieldName === 'actividadEconomica') {
-    this.showDropdown = true;
+  // Función para manejar el enfoque de los inputs
+  onFocus(fieldName: string) {
+    this.focusedFields[fieldName] = true;
   }
-}
-// Función para verificar si el label debe flotar
-shouldFloatLabel(fieldName: string): boolean {
-  return !!this.form.get(fieldName)?.value || !!this.focusedFields[fieldName];
-}
-get nombreEmpresa() {
-  return this.form.get('nombreEmpresa')?.value?.toUpperCase() || '';
-}
 
-// Método para abrir el menú desplegable al hacer foco
+  // Función para manejar el desenfoque de los inputs
+  onBlur(fieldName: string) {
+    this.focusedFields[fieldName] = false;
+  }
 
+  // Función para verificar si el label debe flotar
+  shouldFloatLabel(fieldName: string): boolean {
+    const value = this.form.get(fieldName)?.value;
+    return value !== null && value !== undefined && value !== '' || !!this.focusedFields[fieldName];
+  }
+
+  get nombreEmpresa() {
+    return this.form.get('nombreEmpresa')?.value?.toUpperCase() || '';
+  }
 }

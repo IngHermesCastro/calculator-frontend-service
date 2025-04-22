@@ -389,14 +389,17 @@ async generarPDF(download: boolean = true) {
   }
 
   async continuar() {
-    if (this.form.valid) {
-      try {
-        // Aquí debes limpiar los datos temporales y el formulario
-        this._formSvc.clearForms(); // Limpia datos temporales y resetea el formulario
-        this.router.navigate(['/seguridad-higiene']);
-      } catch (error) {
-        console.error('Error al finalizar:', error);
-      }
-    }
+    this._formSvc.clearForms();
+    this.router.navigate(['*']);
+
+    // if (this.form.valid) {
+    //   try {
+    //     // Aquí debes limpiar los datos temporales y el formulario
+    //     this._formSvc.clearForms(); // Limpia datos temporales y resetea el formulario
+    //     this.router.navigate(['/seguridad-higiene']);
+    //   } catch (error) {
+    //     console.error('Error al finalizar:', error);
+    //   }
+    // }
   }
 }
